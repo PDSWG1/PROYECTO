@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>Consultar los horarios de Reserva</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <h:form id="consultaH">         
+                <p:layout style="min-width:800px;min-height:720px;">
+                <p:layoutUnit position="west" resizable="true" size="200" minSize="80" maxSize="800">
+                    <p:outputLabel  value="Semana (1 a 16): "/>
+                    <p:inputText value="#{beanHorario.semana}" />
+            
+                    <br></br>
+                    <br></br>
+                    
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <p:outputLabel for="laboratorios" value="Laboratorios:" />
+                    <p:selectOneRadio id="laboratorios" value="#{beanHorario.}"  layout="grid" columns="1">
+                        <f:selectItems value="#{radioView.cities}" var="labs" itemLabel="#{city}" itemValue="#{city}"/>
+                    </p:selectOneRadio>
+                    </h:panelGrid>
+                    
+                    <p:commandButton value = "Consultar" actionListener="#{beanConsulta.setCompras()}" update = ":consultadetalles:compras"></p:commandButton>
+            
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <p:dataTable id="compras" var="pedido" value="#{beanConsulta.compras}">
+                        <f:facet name="header">
+                            Orders
+                        </f:facet>
+                        <p:column headerText="Codigo">
+                            <h:outputText value="#{pedido.codigo}" />
+                        </p:column>
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{pedido.fecha}" />
+                        </p:column>
+                        <p:column headerText="Detalles del Pedido">
+                            <h:outputText value="#{pedido.detallesPedido}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:layoutUnit>
+            </p:layout>
+                
+
+        </h:form>
+    </body>
+</html>
