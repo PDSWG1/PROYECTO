@@ -1,3 +1,9 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2015-10-29 20:52:40.261
+
+
+
+
 -- tables
 -- Table asignaturas
 CREATE TABLE asignaturas (
@@ -80,3 +86,59 @@ CREATE TABLE solicitudes (
     laboratorio_nombre varchar(200)  NOT NULL,
     CONSTRAINT solicitudes_pk PRIMARY KEY (id)
 );
+
+
+
+
+
+-- foreign keys
+-- Reference:  bloques_reservas (table: bloques)
+
+
+ALTER TABLE bloques ADD CONSTRAINT bloques_reservas FOREIGN KEY bloques_reservas (reservas_id)
+    REFERENCES reservas (id);
+-- Reference:  labSoft_laboratorio (table: labSoft)
+
+
+ALTER TABLE labSoft ADD CONSTRAINT labSoft_laboratorio FOREIGN KEY labSoft_laboratorio (laboratorio_nombre)
+    REFERENCES laboratorio (nombre);
+-- Reference:  labSoft_softwares (table: labSoft)
+
+
+ALTER TABLE labSoft ADD CONSTRAINT labSoft_softwares FOREIGN KEY labSoft_softwares (softwares_nombre)
+    REFERENCES softwares (nombre);
+-- Reference:  profesoresAsignaturas_asignaturas (table: profesoresAsignaturas)
+
+
+ALTER TABLE profesoresAsignaturas ADD CONSTRAINT profesoresAsignaturas_asignaturas FOREIGN KEY profesoresAsignaturas_asignaturas (asignaturas_mnemonico)
+    REFERENCES asignaturas (mnemonico);
+-- Reference:  profesoresAsignaturas_profesores (table: profesoresAsignaturas)
+
+
+ALTER TABLE profesoresAsignaturas ADD CONSTRAINT profesoresAsignaturas_profesores FOREIGN KEY profesoresAsignaturas_profesores (profesores_codigo)
+    REFERENCES profesores (codigo);
+-- Reference:  reservas_laboratorio (table: reservas)
+
+
+ALTER TABLE reservas ADD CONSTRAINT reservas_laboratorio FOREIGN KEY reservas_laboratorio (laboratorio_nombre)
+    REFERENCES laboratorio (nombre);
+-- Reference:  reservas_profesores (table: reservas)
+
+
+ALTER TABLE reservas ADD CONSTRAINT reservas_profesores FOREIGN KEY reservas_profesores (profesores_codigo)
+    REFERENCES profesores (codigo);
+-- Reference:  solicitudes_laboratorio (table: solicitudes)
+
+
+ALTER TABLE solicitudes ADD CONSTRAINT solicitudes_laboratorio FOREIGN KEY solicitudes_laboratorio (laboratorio_nombre)
+    REFERENCES laboratorio (nombre);
+-- Reference:  solicitudes_profesores (table: solicitudes)
+
+
+ALTER TABLE solicitudes ADD CONSTRAINT solicitudes_profesores FOREIGN KEY solicitudes_profesores (profesores_codigo)
+    REFERENCES profesores (codigo);
+
+
+
+-- End of file.
+
