@@ -6,7 +6,9 @@
 package edu.eci.pdsw.samples.persistence.jdbcimpl;
 
 import edu.eci.pdsw.samples.PersistenceException;
-import edu.eci.pdsw.samples.persistence.DaoFactory;
+import edu.eci.pdsw.samples.DaoFactory;
+import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
+import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,6 +39,7 @@ public class JDBCDaoFactory extends DaoFactory{
 
     }
     
+    @Override
     public void beginSession() throws PersistenceException {
         try {
             if (connectionInstance.get()==null || connectionInstance.get().isClosed()){            
@@ -51,8 +54,11 @@ public class JDBCDaoFactory extends DaoFactory{
         
     }
 
-    
-
+    /**
+     *
+     * @throws PersistenceException
+     */
+    @Override
     public void endSession() throws PersistenceException {
         try {
             if (connectionInstance.get()==null || connectionInstance.get().isClosed()){
@@ -66,6 +72,7 @@ public class JDBCDaoFactory extends DaoFactory{
         }
     }
 
+    @Override
     public void commitTransaction() throws PersistenceException {
         try {
             if (connectionInstance.get()==null || connectionInstance.get().isClosed()){
@@ -79,8 +86,9 @@ public class JDBCDaoFactory extends DaoFactory{
         }        
     }
     
+    @Override
     public void rollbackTransaction() throws PersistenceException {
-                try {
+        try {
             if (connectionInstance.get()==null || connectionInstance.get().isClosed()){
                 throw new PersistenceException("Conection is null or is already closed.");
             }
@@ -92,6 +100,20 @@ public class JDBCDaoFactory extends DaoFactory{
         }
     }
     
+    /**
+     *
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public DaoProfesor getDaoProfesor() throws PersistenceException{
+        return new JDBCDaoProfesor(connectionInstance.get());
+    }
+    
+    @Override
+    public DaoLaboratorio getDaoLaboratorio() throws PersistenceException{
+        return new JDBCDaoLaboratorio(connectionInstance.get());
+    }
 }
 
     

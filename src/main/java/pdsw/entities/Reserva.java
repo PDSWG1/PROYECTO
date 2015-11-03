@@ -6,7 +6,7 @@
 package pdsw.entities;
 
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,12 +16,12 @@ import java.util.Set;
  */
 public class Reserva {
     private int id;
-    private Timestamp fecha;
+    private Date fecha;
     private Set<String> bloques;
-    private int profesor;
-    private String laboratorio;
+    private Profesor profesor;
+    private Laboratorio laboratorio;
     
-    public Reserva(int id, Timestamp fecha, int profesor, String laboratorio) {
+    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio) {
         this.id=id;
         this.fecha=fecha;
         this.profesor=profesor;
@@ -33,7 +33,7 @@ public class Reserva {
         return id;
     }
 
-    public Timestamp getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
@@ -41,11 +41,11 @@ public class Reserva {
         return bloques;
     }
 
-    public int getProfesor() {
+    public Profesor getProfesor() {
         return profesor;
     }
 
-    public String getLaboratorio() {
+    public Laboratorio getLaboratorio() {
         return laboratorio;
     }
 
@@ -53,7 +53,7 @@ public class Reserva {
         this.id = id;
     }
 
-    public void setFecha(Timestamp fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -61,11 +61,11 @@ public class Reserva {
         this.bloques = bloques;
     }
 
-    public void setProfesor(int profesor) {
+    public void setProfesor(Profesor profesor) {
         this.profesor = profesor;
     }
 
-    public void setLaboratorio(String laboratorio) {
+    public void setLaboratorio(Laboratorio laboratorio) {
         this.laboratorio = laboratorio;
     }
     
