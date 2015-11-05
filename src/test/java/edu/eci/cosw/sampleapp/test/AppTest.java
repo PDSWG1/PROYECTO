@@ -1,16 +1,21 @@
 package edu.eci.cosw.sampleapp.test;
 
+import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
+import edu.eci.pdsw.entities.Software;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServiceFacadeException;
 import edu.eci.pdsw.services.ServicesFacade;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Set;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import org.junit.Test;
@@ -46,9 +51,14 @@ public class AppTest {
           //fail("No hay pruebas implementadas");	
     }
 
-
+    /**
+     * --> semana es valido (1 <= semana <=16 y !(1 <= semana <=16))
+     * @throws SQLException
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     */
     @Test
-    public void diponibilidadHorario() throws SQLException, ServiceFacadeException, PersistenceException {
+    public void semanaValida() throws SQLException, ServiceFacadeException, PersistenceException {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
@@ -77,19 +87,109 @@ public class AppTest {
                 + "VALUES (1, 4)");
                 
         stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (2, NOW(), '2015-11-22', 'PDSW', 'Plataformas', 2096724)");
+                + "VALUES (2, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
+        
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (2, 6)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (2, 7)");
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        int semana = 17;
+        Set<Reserva> ans = sf.reservaEsperadar(semana);
+        Assert.assertTrue("No es valia la semana", ans.isEmpty());
+        semana = 1;
+        ans = sf.reservaEsperadar(semana);
+        Assert.assertTrue("No es valia la semana", ans.size()==2);
+    }
+
+    
+    /**
+     * --> Seleccione la información de un laboratorio(verificando el numero de equipos y software disponibles)
+     * @throws SQLException
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     */
+    @Test
+    public void informacionLaboratorio() throws SQLException, ServiceFacadeException, PersistenceException {   
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
+    
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Unity', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Python', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Plataformas', 'Unity')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Plataformas', 'Python')");
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+       
+        String nombre = "Plataformas";
+        Laboratorio ans = sf.infoLaboratorio(nombre);
+        Assert.assertTrue("No es valia la semana", ans.getNumerocomputadores()==30);
+        Set<String> nombres = new HashSet();
+        nombres.add("Unity");
+        nombres.add("Python");
+        Assert.assertTrue("No es la misma información de Software", nombres.equals(ans.getLabsoftware()));
+    }   
+    
+    /**
+     * --> verificar la reserva de que sea posible realizarla(no en bloque montado).
+     * @throws SQLException
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     */
+    @Test
+    public void reservaNoMontada() throws SQLException, ServiceFacadeException, PersistenceException { 
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096724, 'Cesar Vega', 'CEVE', 'cesar.vega-f@mail.escuelaing.edu.co', 3134723073, 1013622836)");
+        
+        stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
+                + "VALUES ('PDSW', 'Proceso de Desarrollo de Software', 4)");
+        
+        stmt.execute("INSERT INTO PROFESORESASIGNATURAS (profesores_codigo, asignaturas_mnemonico) "
+                + "VALUES (2096724, 'PDSW')");
+
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
+        
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
         
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 1)");
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 2)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 3)");        
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 4)");
         
-        ServicesFacade sf = ServicesFacade.getInstance("");
-        int semana = 1;
-        Set<Reserva> ans = sf.reservaEspe(semana);
+        //Profesor pr = new Profesor(2096724, "Cesar Vega", "CEVE", "cesar.vega-f@mail.escuelaing.edu.co", 3134723073, 1013622836);
         
-    }
-
+        Laboratorio lb = new Laboratorio("Plataformas", 30, "Nicolas Gomez");
+        
+        Date fc = new Date(2015, 11, 05);
+        
+        Set<Integer> reservas = new HashSet();
+        reservas.add(4);
+        reservas.add(5);
+        
+        //Reserva rv = new Reserva(2, fc, null, lb, 1, 3, reservas);
+    }  
+   
     /**
      * --> verificar que la reserva  no sea de mas de 6 horas y menos de 1.5 (que estan seleccionados entre 1 y 4 checks)
      *
@@ -98,15 +198,10 @@ public class AppTest {
      * @throws edu.eci.pdsw.samples.persistence.PersistenceException
      */
     @Test
-    public void reservaNoMasDe6Horas() throws SQLException, ServiceFacadeException, PersistenceException
-    {
-    clearDB();
+    public void reservaNoMasDe6Horas() throws SQLException, ServiceFacadeException, PersistenceException{
+        clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-    
-    
-    
-    
     }
 
     @Test
@@ -167,10 +262,3 @@ public class AppTest {
     
 } 
 
-
-/**
-      @Test
-    public void sampleTest() {
-          //fail("No hay pruebas implementadas");	
-    }
-    **/

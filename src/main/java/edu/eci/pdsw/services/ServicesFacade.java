@@ -5,6 +5,7 @@
  */
 package edu.eci.pdsw.services;
 
+import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Reserva;
 import edu.eci.pdsw.samples.persistence.DaoFactory;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
@@ -42,7 +43,8 @@ public class ServicesFacade {
         return instance;
     }
     
-    public Set<Reserva> reservaEspe(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
+    public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
+        /**
         DaoFactory df = DaoFactory.getInstance(properties);
         
         df.beginSession();
@@ -55,8 +57,10 @@ public class ServicesFacade {
         
         df.endSession();
         
-        return ans;
+        * */
+        return null;
     }
+
     public void reservahorariovalido() throws ServiceFacadeException, PersistenceException, SQLException{
         /*
         DaoFactory df = DaoFactory.getInstance(properties);
@@ -98,4 +102,9 @@ public class ServicesFacade {
         df.endSession();
         */      
     }
+
+    public Laboratorio infoLaboratorio(String nombre) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

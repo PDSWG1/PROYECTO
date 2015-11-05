@@ -57,7 +57,8 @@ CREATE TABLE reservas (
     asignatura varchar(5) NOT NULL,
     laboratorio_nombre varchar(200)  NOT NULL,
     profesores_codigo int  NOT NULL,
-    CHECK (fechaRadicado > fechaReserva),
+    CHECK (0 < dia and dia < 7),
+    CHECK (0 < semana and semana < 17),
     CONSTRAINT reservas_pk PRIMARY KEY (id)
 );
 

@@ -14,7 +14,7 @@ import java.util.Set;
  * @author 2087793
  */
 public class Profesor {
-     private long codigo;
+    private long codigo;
     private String nombre;
     private String codigoNombre;
     private String email;
