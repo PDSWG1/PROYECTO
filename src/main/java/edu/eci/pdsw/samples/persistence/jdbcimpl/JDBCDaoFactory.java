@@ -5,8 +5,8 @@
  */
 package edu.eci.pdsw.samples.persistence.jdbcimpl;
 
-import edu.eci.pdsw.samples.PersistenceException;
-import edu.eci.pdsw.samples.DaoFactory;
+import edu.eci.pdsw.samples.persistence.PersistenceException;
+import edu.eci.pdsw.samples.persistence.DaoFactory;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
 import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import java.sql.Connection;

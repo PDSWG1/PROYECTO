@@ -6,17 +6,17 @@
 package edu.eci.pdsw.samples.persistence.jdbcimpl;
 
 import com.mysql.fabric.xmlrpc.base.Data;
-import edu.eci.pdsw.samples.DaoFactory;
-import edu.eci.pdsw.samples.PersistenceException;
+import edu.eci.pdsw.samples.persistence.DaoFactory;
+import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
-import pdsw.entities.Laboratorio;
-import pdsw.entities.Profesor;
-import pdsw.entities.Reserva;
+import edu.eci.pdsw.entities.Laboratorio;
+import edu.eci.pdsw.entities.Profesor;
+import edu.eci.pdsw.entities.Reserva;
 
 /**
  *

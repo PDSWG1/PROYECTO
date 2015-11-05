@@ -1,4 +1,4 @@
-package edu.eci.pdsw.samples;
+package edu.eci.pdsw.samples.persistence;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

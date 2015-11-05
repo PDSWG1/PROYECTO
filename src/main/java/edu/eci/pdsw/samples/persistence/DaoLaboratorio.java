@@ -5,11 +5,10 @@
  */
 package edu.eci.pdsw.samples.persistence;
 
-import edu.eci.pdsw.samples.PersistenceException;
 import java.sql.SQLException;
 import java.util.Set;
-import pdsw.entities.Laboratorio;
-import pdsw.entities.Reserva;
+import edu.eci.pdsw.entities.Laboratorio;
+import edu.eci.pdsw.entities.Reserva;
 
 /**
  *

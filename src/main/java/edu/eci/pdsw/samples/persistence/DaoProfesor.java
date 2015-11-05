@@ -5,9 +5,8 @@
  */
 package edu.eci.pdsw.samples.persistence;
 
-import edu.eci.pdsw.samples.PersistenceException;
 import java.sql.SQLException;
-import pdsw.entities.Profesor;
+import edu.eci.pdsw.entities.Profesor;
 
 /**
  *

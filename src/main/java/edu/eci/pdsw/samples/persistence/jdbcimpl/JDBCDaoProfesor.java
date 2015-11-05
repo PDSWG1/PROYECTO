@@ -5,13 +5,13 @@
  */
 package edu.eci.pdsw.samples.persistence.jdbcimpl;
 
-import edu.eci.pdsw.samples.PersistenceException;
+import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import pdsw.entities.Profesor;
+import edu.eci.pdsw.entities.Profesor;
 
 /**
  *

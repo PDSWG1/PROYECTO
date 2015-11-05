@@ -23,7 +23,7 @@ CREATE TABLE labSoft (
 );
 
 -- Table laboratorio
-CREATE TABLE laboratorio (
+CREATE TABLE laboratorios (
     nombre varchar(200)  NOT NULL,
     numComputadores int  NOT NULL,
     encargado varchar(200)  NOT NULL,
