@@ -10,38 +10,37 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <head>
-        <title>Consultar los horarios de Reserva</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
         <h:form id="consultaH">
-                <p:growl id="msgs" showDetail="true" />
-
+            <!-- Consulta de semana-->
                 <p:layout style="min-width:800px;min-height:720px;">
-                <!-- Semana a buscar -->
                 <p:layoutUnit position="west" resizable="true" size="200" minSize="80" maxSize="800">
                     <p:outputLabel  value="Semana (1 a 16): "/>
                     <p:inputText value="#{beanHorario.semana}" />
-            
+
                     <br></br>
                     <br></br>
-                <!-- Selección de laboratorios -->
-                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                    <p:outputLabel for="labs" value="Laboratorios:" />
-                    <p:selectOneRadio id="lab" value="#{beanHorario.NombLaboratorio}">
-                        <f:selectItem itemLabel="Plataformas Computacionales" itemValue="Plataformas Computacionales" />
-                        <f:selectItem itemLabel="Laboratorio de Informática" itemValue="Laboratorio de Informática" />
-                        <f:selectItem itemLabel="Redes" itemValue="Redes" />
-                        <f:selectItem itemLabel="Sala Doble Plataformas y Redes" itemValue="Sala Doble Plataformas y Redes" />
-                    </p:selectOneRadio>
-                </h:panelGrid>
-                    
+
                 <p:commandButton value = "Consultar" actionListener="#{beanHorario.consultarH}" update = ":consultaH:horarios"></p:commandButton>
-            
+
+                </p:layoutUnit>
+                    
+                <!-- Información de Laboratorios-->
+                <p:layoutUnit position="center" >
+                        <p:ring id="basic" value="#{ringView.cars}" var="car">
+                            <p:outputPanel style="text-align: center;" layout="block">
+                                #{car.brand}
+                                <br />
+                                <p:commandButton update=":form:carDetail" icon="ui-icon-search" title="View" oncomplete="PF('carDialog').show();">
+                                    <f:setPropertyActionListener value="#{car}" target="#{ringView.selectedCar}" />
+                                </p:commandButton>
+                            </p:outputPanel>
+                        </p:ring>
                 </p:layoutUnit>
                 
-                <!-- Formato de muestra de reservas -->
-                <p:layoutUnit position="center">
+                <!-- Formato para reservar laboratorio-->
+                <p:layoutUnit position="south" resizable="true" size="200" minSize="80" maxSize="800">
                     <p:dataTable id="horarios" var="hor" value="#{beanHorario.reservas}">
                         <f:facet name="Horarios disponibles en la fecha consultada">
                             Horarios disponibles en la fecha consultada

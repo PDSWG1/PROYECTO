@@ -44,16 +44,14 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         Reserva rv;
         Profesor pr;
         Laboratorio lb;
-        ps = con.prepareStatement("SELECT id, fechaRadicado, fechaReserva, asigantura, laboratorio_nombre, profesores_codigo, semana "
-                + "FROM reservas "
-                + "WHERE semana == ?");
-        
+        /**
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
             pr = DaoFactory.getInstance(null).getDaoProfesor().getProfesor(rs.getInt(6));
             lb = DaoFactory.getInstance(null).getDaoLaboratorio().getLaboratorio(rs.getString(5));
-            rv = new Reserva(rs.getInt(1), rs.getDate(2), pr, lb);
+            //rv = new Reserva(rs.getInt(1), rs.getDate(2), pr, lb);
         }
+        * */
         return ans;
         
     }

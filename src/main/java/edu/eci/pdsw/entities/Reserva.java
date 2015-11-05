@@ -20,15 +20,27 @@ public class Reserva {
     private Set<String> bloques;
     private Profesor profesor;
     private Laboratorio laboratorio;
+    private int Semana;
     
-    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio) {
+    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana) {
         this.id=id;
         this.fecha=fecha;
         this.profesor=profesor;
         this.laboratorio=laboratorio;
+        this.Semana=semana;
          bloques=new LinkedHashSet<>();
 }
 
+    public int getSemana() {
+        return Semana;
+    }
+
+    public void setSemana(int Semana) {
+        this.Semana = Semana;
+    }
+    
+    
+    
     public int getId() {
         return id;
     }

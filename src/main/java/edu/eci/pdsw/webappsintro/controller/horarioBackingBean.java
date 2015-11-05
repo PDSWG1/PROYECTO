@@ -5,6 +5,9 @@
  */
 package edu.eci.pdsw.webappsintro.controller;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -21,18 +24,6 @@ public class horarioBackingBean {
     private String nomLaboratorio;
     private LinkedList<String> labs = new LinkedList<>();
     
-    /*
-     * Creación de lista con nombres de laboratorios en la decanatura de Ingeniería de Sistemas
-     */
-    
-    public void creacionLaboratorios(){
-        labs.add("Plataformas Computacionales");
-        labs.add("Laboratorio de Informática");
-        labs.add("Redes");
-        labs.add("Sala Doble Plataformas y Redes");
-        
-    }
-    
     /*Getter del número de la semana universitaria
      * @return número de la semana universitaria
      */
@@ -45,13 +36,6 @@ public class horarioBackingBean {
      */
     public void setSemana(int sem){
         this.semana = sem;
-    }
-    
-    /*Getter del nombre de laboratorio
-     * @return nombre del laboratorio
-     */
-    public LinkedList<String> getLaboratorios(){
-        return labs;
     }
     
     /*Getter del nombre de laboratorio que desea consultar
@@ -68,6 +52,14 @@ public class horarioBackingBean {
     public void setNombreLaboratorio(String nomLab){
         this.nomLaboratorio = nomLab;
     }
-       
+    
+    /*Getter del día de la semana
+     * @param fecha de la reserva
+     */
+    public int getDayOfTheWeek(Date d){
+	GregorianCalendar cal = new GregorianCalendar();
+	cal.setTime(d);
+	return cal.get(Calendar.DAY_OF_WEEK);		
+    }
     
 }
