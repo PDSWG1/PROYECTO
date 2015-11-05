@@ -5,9 +5,6 @@
  */
 package edu.eci.pdsw.webappsintro.controller;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -55,11 +52,11 @@ public class horarioBackingBean {
     
     /*Getter del día de la semana
      * @param fecha de la reserva
-     */
+     
     public int getDayOfTheWeek(Date d){
 	GregorianCalendar cal = new GregorianCalendar();
 	cal.setTime(d);
 	return cal.get(Calendar.DAY_OF_WEEK);		
     }
-    
+    */
 }

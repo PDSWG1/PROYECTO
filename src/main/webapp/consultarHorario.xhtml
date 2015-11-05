@@ -9,77 +9,68 @@ and open the template in the editor.
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <head>
+    <h:head>
         <title>Consultar los horarios de Reserva</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
+    </h:head>
+    <h:body>
         <h:form id="consultaH">
-                <p:growl id="msgs" showDetail="true" />
+            <p:growl id="msgs" showDetail="true" />
 
-                <p:layout style="min-width:800px;min-height:720px;">
-                <!-- Semana a buscar -->
-                <p:layoutUnit position="west" resizable="true" size="200" minSize="80" maxSize="800">
-                    <p:outputLabel  value="Semana (1 a 16): "/>
-                    <p:inputText value="#{beanHorario.semana}" />
+            <p:layout style="min-width:800px;min-height:720px;">
+            <!-- Semana a buscar -->
+            <p:layoutUnit position="west" resizable = "true" size="480" minSize="80" maxSize="500">
+                
+                <p:outputLabel for="labs" value="Elija una semana:" />
+                
+                <br></br>
+                <br></br>
+                
+                <p:selectOneListbox id="labs" value="#{beanHorario.semana}">
+                    <f:selectItem itemLabel="1" itemValue="1" />
+                    <f:selectItem itemLabel="2" itemValue="2" />
+                    <f:selectItem itemLabel="3" itemValue="3" />
+                    <f:selectItem itemLabel="4" itemValue="4" />
+                    <f:selectItem itemLabel="5" itemValue="5" />
+                    <f:selectItem itemLabel="6" itemValue="6" />
+                    <f:selectItem itemLabel="7" itemValue="7" />
+                    <f:selectItem itemLabel="8" itemValue="8" />
+                    <f:selectItem itemLabel="9" itemValue="9" />
+                    <f:selectItem itemLabel="10" itemValue="10" />
+                    <f:selectItem itemLabel="11" itemValue="11" />
+                    <f:selectItem itemLabel="12" itemValue="12" />
+                    <f:selectItem itemLabel="13" itemValue="13" />
+                    <f:selectItem itemLabel="14" itemValue="14" />
+                    <f:selectItem itemLabel="15" itemValue="15" />
+                    <f:selectItem itemLabel="16" itemValue="16" />
+                </p:selectOneListbox>
+
+                </p:layoutUnit>
             
+            <!-- Selección del laboratorio deseado -->
+                <p:layoutUnit position="center">
+                    
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <h:outputText value="Laboratorios:" />
+                    
                     <br></br>
-                    <br></br>
-                <!-- Selección de laboratorios -->
-                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                    <p:outputLabel for="labs" value="Laboratorios:" />
-                    <p:selectOneRadio id="lab" value="#{beanHorario.NombLaboratorio}">
+                    
+                    <p:selectOneButton value="#{beanHorario.nombLaboratorio}">
                         <f:selectItem itemLabel="Plataformas Computacionales" itemValue="Plataformas Computacionales" />
                         <f:selectItem itemLabel="Laboratorio de Informática" itemValue="Laboratorio de Informática" />
                         <f:selectItem itemLabel="Redes" itemValue="Redes" />
                         <f:selectItem itemLabel="Sala Doble Plataformas y Redes" itemValue="Sala Doble Plataformas y Redes" />
-                    </p:selectOneRadio>
+                    </p:selectOneButton>
                 </h:panelGrid>
-                    
-                <p:commandButton value = "Consultar" actionListener="#{beanHorario.consultarH}" update = ":consultaH:horarios"></p:commandButton>
+                </p:layoutUnit>
             
+                <p:layoutUnit position="south" resizable = "true" size="420" minSize="100" maxSize="500">
+                    Aqui van los horarios
                 </p:layoutUnit>
-                
-                <!-- Formato de muestra de reservas -->
-                <p:layoutUnit position="center">
-                    <p:dataTable id="horarios" var="hor" value="#{beanHorario.reservas}">
-                        <f:facet name="Horarios disponibles en la fecha consultada">
-                            Horarios disponibles en la fecha consultada
-                        </f:facet>
-                        <p:column headerText="Semana">
-                            <h:outputText value="#{hor.semana}" />
-                        </p:column>
-                        <p:column headerText="Hora">
-                            <h:outputText value="#{hor.bloque}" />
-                        </p:column>
-                        <p:column headerText="Lunes">
-                            <h:outputText value="#{hor.lunes}" />
-                        </p:column>
-                        <p:column headerText="Martes">
-                            <h:outputText value="#{hor.martes}" />
-                        </p:column>
-                        <p:column headerText="Miercoles">
-                            <h:outputText value="#{hor.mier}" />
-                        </p:column>
-                        <p:column headerText="Jueves">
-                            <h:outputText value="#{hor.jueves}" />
-                        </p:column>
-                        <p:column headerText="Viernes">
-                            <h:outputText value="#{hor.viernes}" />
-                        </p:column>
-                        <p:column headerText="Sábado">
-                            <h:outputText value="#{hor.sabado}" />
-                        </p:column>
-                        <p:column style="width:32px;text-align: center">
-                             <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{car}" target="#{dtSelectionView.selectedCar}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                </p:layoutUnit>
+               
             </p:layout>
                 
 
         </h:form>
-    </body>
+    </h:body>
 </html>
