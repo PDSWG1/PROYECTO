@@ -74,4 +74,6 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         }
         return lb;
     }
+    
+    
 }

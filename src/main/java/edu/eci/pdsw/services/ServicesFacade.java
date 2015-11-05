@@ -57,4 +57,45 @@ public class ServicesFacade {
         
         return ans;
     }
+    public void reservahorariovalido() throws ServiceFacadeException, PersistenceException, SQLException{
+        /*
+        DaoFactory df = DaoFactory.getInstance(properties);
+        
+        df.beginSession();
+       
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+        
+   
+        
+        df.commitTransaction();
+        
+        df.endSession();
+        */       
+    }
+    public void reservabloquevalido()  throws SQLException, ServiceFacadeException, PersistenceException {
+         /*
+        DaoFactory df = DaoFactory.getInstance(properties);
+        
+        df.beginSession();
+       
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+        
+        df.commitTransaction();
+        
+        df.endSession();
+        */      
+    }
+    public void semanavalido()  throws SQLException, ServiceFacadeException, PersistenceException {
+        /*
+        DaoFactory df = DaoFactory.getInstance(properties);
+        
+        df.beginSession();
+       
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+        
+        df.commitTransaction();
+        
+        df.endSession();
+        */      
+    }
 }
