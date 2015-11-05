@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
@@ -136,9 +137,11 @@ public class AppTest {
         String nombre = "Plataformas";
         Laboratorio ans = sf.infoLaboratorio(nombre);
         Assert.assertTrue("No es valia la semana", ans.getNumerocomputadores()==30);
-        Set<String> nombres = new HashSet();
+        
+        Set<String> nombres = new HashSet(); // para comparar
         nombres.add("Unity");
         nombres.add("Python");
+        
         Assert.assertTrue("No es la misma información de Software", nombres.equals(ans.getLabsoftware()));
     }   
     
@@ -177,7 +180,7 @@ public class AppTest {
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 4)");
         
-        //Profesor pr = new Profesor(2096724, "Cesar Vega", "CEVE", "cesar.vega-f@mail.escuelaing.edu.co", 3134723073, 1013622836);
+        Profesor pr = new Profesor(Long.parseLong("2096724"), "Cesar Vega", "CEVE", "cesar.vega-f@mail.escuelaing.edu.co",Long.parseLong("3134723073"),Long.parseLong("1013622836"));
         
         Laboratorio lb = new Laboratorio("Plataformas", 30, "Nicolas Gomez");
         
@@ -187,7 +190,25 @@ public class AppTest {
         reservas.add(4);
         reservas.add(5);
         
-        //Reserva rv = new Reserva(2, fc, null, lb, 1, 3, reservas);
+        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas);
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        sf.insertReserva(rv);
+        
+        Set<Reserva> ans = sf.reservaEsperadar(1);
+        
+        reservas = new HashSet();
+        for (int i = 1; i < 5; i++){
+            reservas.add(i);
+        }
+        
+        Iterator<Reserva> i = ans.iterator();
+        while (i.hasNext()){
+            Reserva r = i.next();
+            Assert.assertTrue("No es la misma información de Software", reservas.equals(r.getBloques()));
+        }
+        
     }  
    
     /**
@@ -248,7 +269,7 @@ public class AppTest {
                 + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
           
         ServicesFacade sf = ServicesFacade.getInstance("");
-       semanaValido();
+        semanaValido();
      }
      @Test
      public void repiclarReservaValido()  throws SQLException, ServiceFacadeException, PersistenceException {

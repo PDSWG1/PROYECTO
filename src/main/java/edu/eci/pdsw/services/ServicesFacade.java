@@ -44,66 +44,24 @@ public class ServicesFacade {
     }
     
     public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
-        /**
-        DaoFactory df = DaoFactory.getInstance(properties);
-        
-        df.beginSession();
-       
-        DaoLaboratorio dpro = df.getDaoLaboratorio();
-        
-        Set<Reserva> ans = dpro.reservaEspe(semana);
-        
-        df.commitTransaction();
-        
-        df.endSession();
-        
-        * */
         return null;
     }
 
     public void reservahorariovalido() throws ServiceFacadeException, PersistenceException, SQLException{
-        /*
-        DaoFactory df = DaoFactory.getInstance(properties);
-        
-        df.beginSession();
-       
-        DaoLaboratorio dpro = df.getDaoLaboratorio();
-        
-   
-        
-        df.commitTransaction();
-        
-        df.endSession();
-        */       
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     public void reservabloquevalido()  throws SQLException, ServiceFacadeException, PersistenceException {
-         /*
-        DaoFactory df = DaoFactory.getInstance(properties);
-        
-        df.beginSession();
-       
-        DaoLaboratorio dpro = df.getDaoLaboratorio();
-        
-        df.commitTransaction();
-        
-        df.endSession();
-        */      
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
     }
     public void semanavalido()  throws SQLException, ServiceFacadeException, PersistenceException {
-        /*
-        DaoFactory df = DaoFactory.getInstance(properties);
-        
-        df.beginSession();
-       
-        DaoLaboratorio dpro = df.getDaoLaboratorio();
-        
-        df.commitTransaction();
-        
-        df.endSession();
-        */      
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
     }
 
     public Laboratorio infoLaboratorio(String nombre) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void insertReserva(Reserva rv) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
