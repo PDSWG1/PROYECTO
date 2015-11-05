@@ -88,6 +88,25 @@ public class AppTest {
         Set<Reserva> ans = sf.reservaEspe(semana);
         
     }
+    
+    /**
+     * --> verificar que la reserva  no sea de mas de 6 horas y menos de 1.5 (que estan seleccionados entre 1 y 4 checks)
+     *
+     * @throws java.sql.SQLException
+     * @throws edu.eci.pdsw.services.ServiceFacadeException
+     * @throws edu.eci.pdsw.samples.persistence.PersistenceException
+     */
+    @Test
+    public void reservaNoMasDe6Horas() throws SQLException, ServiceFacadeException, PersistenceException
+    {
+    clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+    
+    
+    
+    
+    }
 
     /**
       @Test

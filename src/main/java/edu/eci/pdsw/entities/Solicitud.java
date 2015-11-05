@@ -20,9 +20,9 @@ public class Solicitud {
     private boolean estado;
     private String comentario;
     private String laboratorio;
-    private int codigoprofesor;
+    private long codigoprofesor;
     
-    public Solicitud(int id,String nombrelab, Timestamp fecha,boolean estado, String comentario, String laboratorio,int codigoprofesor) {
+    public Solicitud(int id,String nombrelab, Timestamp fecha,boolean estado, String comentario, String laboratorio,long codigoprofesor) {
         this.id=id;
         this.fecha=fecha;
         this.nombrelab=nombrelab;
@@ -56,7 +56,7 @@ public class Solicitud {
         return laboratorio;
     }
 
-    public int getCodigoprofesor() {
+    public long getCodigoprofesor() {
         return codigoprofesor;
     }
 
@@ -84,7 +84,7 @@ public class Solicitud {
         this.laboratorio = laboratorio;
     }
 
-    public void setCodigoprofesor(int codigoprofesor) {
+    public void setCodigoprofesor(long codigoprofesor) {
         this.codigoprofesor = codigoprofesor;
     }
     

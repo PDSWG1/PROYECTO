@@ -14,16 +14,16 @@ import java.util.Set;
  * @author 2087793
  */
 public class Profesor {
-     private int codigo;
+     private long codigo;
     private String nombre;
     private String codigoNombre;
     private String email;
-    private int telefono;
-    private int cedula;
+    private long telefono;
+    private long cedula;
     private Set<Asignatura> asignatura;
     
     
-    public Profesor(int codigo, String nombre, String codigoNombre, String email,int telefono,int cedula) {
+    public Profesor(long codigo, String nombre, String codigoNombre, String email,long telefono,long cedula) {
         this.codigo=codigo;
         this.nombre=nombre;
         this.codigoNombre=codigoNombre;
@@ -33,7 +33,7 @@ public class Profesor {
          asignatura=new LinkedHashSet<>();
 }
 
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
@@ -49,11 +49,11 @@ public class Profesor {
         return email;
     }
 
-    public int getTelefono() {
+    public long getTelefono() {
         return telefono;
     }
 
-    public int getCedula() {
+    public long getCedula() {
         return cedula;
     }
 
@@ -63,7 +63,7 @@ public class Profesor {
 
 
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(long codigo) {
         this.codigo = codigo;
     }
 
@@ -79,11 +79,11 @@ public class Profesor {
         this.email = email;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(long telefono) {
         this.telefono = telefono;
     }
 
-    public void setCedula(int cedula) {
+    public void setCedula(long cedula) {
         this.cedula = cedula;
     }
 

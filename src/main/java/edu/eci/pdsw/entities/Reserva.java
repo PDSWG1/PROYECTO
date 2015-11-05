@@ -17,7 +17,8 @@ import java.util.Set;
 public class Reserva {
     private int id;
     private Date fecha;
-    private Set<String> bloques;
+    private Set<Integer> bloques;
+    
     private Profesor profesor;
     private Laboratorio laboratorio;
     private int semana;
@@ -51,9 +52,10 @@ public class Reserva {
         return fecha;
     }
 
-    public Set<String> getBloques() {
+    public Set<Integer> getBloques() {
         return bloques;
     }
+
 
     public Profesor getProfesor() {
         return profesor;
@@ -71,7 +73,7 @@ public class Reserva {
         this.fecha = fecha;
     }
 
-    public void setBloques(Set<String> bloques) {
+    public void setBloques(Set<Integer> bloques) {
         this.bloques = bloques;
     }
 
