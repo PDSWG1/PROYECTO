@@ -20,7 +20,7 @@ public class Reserva {
     private Set<String> bloques;
     private Profesor profesor;
     private Laboratorio laboratorio;
-    private int Semana;
+    private int semana;
     private int dia;
     
     public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana, int dia) {
@@ -28,17 +28,17 @@ public class Reserva {
         this.fecha=fecha;
         this.profesor=profesor;
         this.laboratorio=laboratorio;
-        this.Semana=semana;
+        this.semana=semana;
         this.dia=dia;
          bloques=new LinkedHashSet<>();
 }
 
     public int getSemana() {
-        return Semana;
+        return semana;
     }
 
-    public void setSemana(int Semana) {
-        this.Semana = Semana;
+    public void setSemana(int semana) {
+        this.semana = semana;
     }
     
     

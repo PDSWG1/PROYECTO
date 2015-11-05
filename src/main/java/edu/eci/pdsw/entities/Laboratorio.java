@@ -18,7 +18,7 @@ public class Laboratorio {
     private String nombreLab;
     private int numerocomputadores;
     private String encargado;
-    private Set<String> labsoftware;
+    private Set<Software> labsoftware;
     
     public Laboratorio(String nombreLab, int numerocomputadores, String encargado) {
         this.nombreLab=nombreLab;
@@ -40,7 +40,7 @@ public class Laboratorio {
         return encargado;
     }
 
-    public Set<String> getLabsoftware() {
+    public Set<Software> getLabsoftware() {
         return labsoftware;
     }
     
@@ -57,7 +57,7 @@ public class Laboratorio {
         this.encargado = encargado;
     }
 
-    public void setLabsoftware(Set<String> labsoftware) {
+    public void setLabsoftware(Set<Software> labsoftware) {
         this.labsoftware = labsoftware;
     }
     

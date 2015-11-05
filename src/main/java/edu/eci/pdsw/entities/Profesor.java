@@ -20,7 +20,7 @@ public class Profesor {
     private String email;
     private int telefono;
     private int cedula;
-    private Set<String> asignatura;
+    private Set<Asignatura> asignatura;
     
     
     public Profesor(int codigo, String nombre, String codigoNombre, String email,int telefono,int cedula) {
@@ -57,9 +57,11 @@ public class Profesor {
         return cedula;
     }
 
-    public Set<String> getAsignatura() {
+    public Set<Asignatura> getAsignatura() {
         return asignatura;
     }
+
+
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
@@ -85,7 +87,7 @@ public class Profesor {
         this.cedula = cedula;
     }
 
-    public void setAsignatura(Set<String> asignatura) {
+    public void setAsignatura(Set<Asignatura> asignatura) {
         this.asignatura = asignatura;
     }
     
