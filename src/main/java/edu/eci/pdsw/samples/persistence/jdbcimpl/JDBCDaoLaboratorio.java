@@ -43,7 +43,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         Reserva rv;
         Profesor pr;
         Laboratorio lb;
-        ps = con.prepareStatement("SELECT id, fechaRadicado, fechaReserva, asigantura, laboratorio_nombre, profesores_codigo "
+        ps = con.prepareStatement("SELECT id, fechaRadicado, fechaReserva, asignatura, laboratorio_nombre, profesores_codigo, semana "
                 + "FROM reservas "
                 + "WHERE fechaReserva > CURTIME()");
         ResultSet rs = ps.executeQuery();
