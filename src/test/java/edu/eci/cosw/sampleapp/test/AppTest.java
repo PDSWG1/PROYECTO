@@ -57,20 +57,31 @@ public class AppTest {
         stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
                 + "VALUES ('PDSW', 'Proceso de Desarrollo de Software', 4)");
         
-        stmt.execute("INSERT INTO profesoresAsignaturas (profesores_codigo, asignaturas_mnemonico) "
+        stmt.execute("INSERT INTO PROFESORESASIGNATURAS (profesores_codigo, asignaturas_mnemonico) "
                 + "VALUES (2096724, 'PDSW')");
 
-        stmt.execute("INSERT INTO LOBARATORIOS (nombre, numComputadores, encargado) "
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
         
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asigantura, laboratorio_nombre, profesores_codigo)"
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
                 + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
         
-        stmt.execute("INSERT INTO BLOQUES (id, fechaRadicado, semana, dia, asigantura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (1, NOW(), '2015-11-21', 'PDSW', 'Plataformas', 2096724)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 1)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 2)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 3)");        
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 4)");
                 
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, dia, asigantura, laboratorio_nombre, profesores_codigo)"
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, dia, asignatura, laboratorio_nombre, profesores_codigo)"
                 + "VALUES (2, NOW(), '2015-11-22', 'PDSW', 'Plataformas', 2096724)");
+        
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 1)");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (1, 2)");
         
         ServicesFacade sf = ServicesFacade.getInstance("");
         int semana = 1;

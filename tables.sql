@@ -52,9 +52,9 @@ CREATE TABLE profesoresAsignaturas (
 CREATE TABLE reservas (
     id int  NOT NULL,
     fechaRadicado date  NOT NULL,
-    fechaReserva date  NOT NULL,
+    dia int NOT NULL,
     semana int NOT NULL,
-    asigantura varchar(5) NOT NULL,
+    asignatura varchar(5) NOT NULL,
     laboratorio_nombre varchar(200)  NOT NULL,
     profesores_codigo int  NOT NULL,
     CHECK (fechaRadicado > fechaReserva),
