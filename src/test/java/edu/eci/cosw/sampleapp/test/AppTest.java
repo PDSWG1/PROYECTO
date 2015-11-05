@@ -1,11 +1,15 @@
 package edu.eci.cosw.sampleapp.test;
 
+import edu.eci.pdsw.entities.Reserva;
+import edu.eci.pdsw.samples.persistence.PersistenceException;
+import edu.eci.pdsw.services.ServiceFacadeException;
+import edu.eci.pdsw.services.ServicesFacade;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Set;
 import org.junit.After;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 
 import org.junit.Test;
@@ -23,8 +27,15 @@ public class AppTest {
     public void clearDB() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("delete from COMENTARIOS");
-        stmt.execute("delete from SUSCRIPTORES");
+        stmt.execute("delete from ASIGNATURAS");
+        stmt.execute("delete from BLOQUES");
+        stmt.execute("delete from LABSOFT");
+        stmt.execute("delete from LABORATORIOS");
+        stmt.execute("delete from PROFESORES");
+        stmt.execute("delete from PROFESORESASIGNATURAS");
+        stmt.execute("delete from RESERVAS");
+        stmt.execute("delete from SOFTWARES");
+        stmt.execute("delete from SOLICITUDES");
         conn.commit();
         conn.close();
     }
@@ -36,7 +47,7 @@ public class AppTest {
 
 
     @Test
-    public void diponibilidadHorario() throws SQLException {
+    public void diponibilidadHorario() throws SQLException, ServiceFacadeException, PersistenceException {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
@@ -52,9 +63,18 @@ public class AppTest {
         stmt.execute("INSERT INTO LOBARATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
         
-        stmt.execute("INSERT INTO RESERVAS (id, comentario, puntaje, fecha, CLIENTES_id)"
-                + "VALUES (2, 'esta Malo otra vez', 23, NOW(), 2096724)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asigantura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
         
+        stmt.execute("INSERT INTO BLOQUES (id, fechaRadicado, semana, dia, asigantura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (1, NOW(), '2015-11-21', 'PDSW', 'Plataformas', 2096724)");
+                
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, dia, asigantura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (2, NOW(), '2015-11-22', 'PDSW', 'Plataformas', 2096724)");
+        
+        ServicesFacade sf = ServicesFacade.getInstance("");
+        int semana = 1;
+        Set<Reserva> ans = sf.reservaEspe(semana);
         
     }
 

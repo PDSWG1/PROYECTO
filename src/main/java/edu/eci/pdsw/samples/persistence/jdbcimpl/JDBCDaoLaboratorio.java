@@ -32,24 +32,26 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
     
     /**
      *
+     * @param semana
      * @return
      * @throws SQLException
      * @throws PersistenceException
      */
     @Override
-    public Set<Reserva> allReservas() throws SQLException, PersistenceException{
+    public Set<Reserva> reservaEspe(int semana) throws SQLException, PersistenceException{
         PreparedStatement ps;
         Set<Reserva> ans = null;
         Reserva rv;
         Profesor pr;
         Laboratorio lb;
-        ps = con.prepareStatement("SELECT id, fechaRadicado, fechaReserva, asigantura, laboratorio_nombre, profesores_codigo "
+        ps = con.prepareStatement("SELECT id, fechaRadicado, fechaReserva, asigantura, laboratorio_nombre, profesores_codigo, semana "
                 + "FROM reservas "
-                + "WHERE fechaReserva > CURTIME()");
+                + "WHERE semana == ?");
+        
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            pr = DaoFactory.getInstance().getDaoProfesor().getProfesor(rs.getInt(6));
-            lb = DaoFactory.getInstance().getDaoLaboratorio().getLaboratorio(rs.getString(5));
+            pr = DaoFactory.getInstance(null).getDaoProfesor().getProfesor(rs.getInt(6));
+            lb = DaoFactory.getInstance(null).getDaoLaboratorio().getLaboratorio(rs.getString(5));
             rv = new Reserva(rs.getInt(1), rs.getDate(2), pr, lb);
         }
         return ans;

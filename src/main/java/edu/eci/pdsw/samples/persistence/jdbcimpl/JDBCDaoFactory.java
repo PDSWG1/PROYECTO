@@ -12,6 +12,7 @@ import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  *
@@ -20,21 +21,26 @@ import java.sql.SQLException;
 public class JDBCDaoFactory extends DaoFactory{
     private static final ThreadLocal<Connection> connectionInstance = new ThreadLocal<Connection>() {
     };
- 
-    private static Connection openConnection() throws PersistenceException{
-        //url de nuestra base de datos
-            String url="jdbc:mysql://desarrollo.is.escuelaing.edu.co:3306/pdswg1";
-            String driver="com.mysql.jdbc.Driver";
-            String user="pdswg1";
-            String pwd="pdswg01";
-                        
+
+    private static Properties appProperties = null;
+
+    public JDBCDaoFactory(Properties appProperties) {
+        this.appProperties = appProperties;
+    }
+
+    private static Connection openConnection() throws PersistenceException {
+        String url = appProperties.getProperty("url");
+        String driver = appProperties.getProperty("driver");
+        String user = appProperties.getProperty("user");
+        String pwd = appProperties.getProperty("pwd");
+
         try {
             Class.forName(driver);
-            Connection _con=DriverManager.getConnection(url,user,pwd);
+            Connection _con = DriverManager.getConnection(url, user, pwd);
             _con.setAutoCommit(false);
             return _con;
         } catch (ClassNotFoundException | SQLException ex) {
-            throw new PersistenceException("Error on connection opening.",ex);
+            throw new PersistenceException("Error on connection opening.", ex);
         }
 
     }
