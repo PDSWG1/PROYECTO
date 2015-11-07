@@ -23,14 +23,14 @@ public class Profesor {
     private Set<Asignatura> asignatura;
     
     
-    public Profesor(long codigo, String nombre, String codigoNombre, String email,long telefono,long cedula) {
+    public Profesor(long codigo, String nombre, String codigoNombre, String email,long telefono,long cedula, Set<Asignatura> asignatura) {
         this.codigo=codigo;
         this.nombre=nombre;
         this.codigoNombre=codigoNombre;
         this.email=email;
         this.telefono=telefono;
         this.cedula=cedula;
-         asignatura=new LinkedHashSet<>();
+        this.asignatura=asignatura;
 }
 
     public long getCodigo() {

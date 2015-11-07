@@ -58,7 +58,7 @@ public class ServicesFacade {
        
         DaoLaboratorio dpro = df.getDaoLaboratorio();
         
-        Set<Reserva> ans = dpro.reservaEspe(semana);
+        Set<Reserva> ans = dpro.reservaEsperadar(semana);
         
         df.commitTransaction();
         

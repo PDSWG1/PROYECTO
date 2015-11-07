@@ -20,11 +20,11 @@ public class Laboratorio {
     private String encargado;
     private Set<Software> labsoftware;
     
-    public Laboratorio(String nombreLab, int numerocomputadores, String encargado) {
+    public Laboratorio(String nombreLab, int numerocomputadores, String encargado, Set<Software> labsoftware) {
         this.nombreLab=nombreLab;
         this.numerocomputadores=numerocomputadores;
         this.encargado=encargado;
-        labsoftware=new LinkedHashSet<>();
+        this.labsoftware=labsoftware;
         
     }    
 

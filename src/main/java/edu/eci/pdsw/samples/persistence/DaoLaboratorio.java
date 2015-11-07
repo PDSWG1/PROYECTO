@@ -16,7 +16,7 @@ import edu.eci.pdsw.entities.Reserva;
  */
 public interface DaoLaboratorio {
     
-    public Set<Reserva> reservaEspe(int semana) throws SQLException, PersistenceException;
+    public Set<Reserva> reservaEsperadar(int semana) throws SQLException, PersistenceException;
     
     public Laboratorio getLaboratorio(String nombre) throws SQLException;
     

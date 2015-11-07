@@ -18,13 +18,13 @@ public class Reserva {
     private int id;
     private Date fecha;
     private Set<Integer> bloques;
-    
+    private Asignatura asignatura;
     private Profesor profesor;
     private Laboratorio laboratorio;
     private int semana;
     private int dia;
     
-    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana, int dia, Set<Integer> bloques) {
+    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana, int dia, Set<Integer> bloques, Asignatura asignatura) {
         this.id=id;
         this.fecha=fecha;
         this.profesor=profesor;
@@ -32,6 +32,7 @@ public class Reserva {
         this.semana=semana;
         this.dia=dia;
         this.bloques=bloques;
+        this.asignatura=asignatura;
 }
 
     public int getSemana() {
