@@ -43,8 +43,28 @@ public class ServicesFacade {
         return instance;
     }
     
+    /**
+     *
+     * @param semana es el numero de la semana que se quiere consultar
+     * @return
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     * @throws SQLException
+     */
     public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
-        return null;
+        DaoFactory df = DaoFactory.getInstance(properties);
+        
+        df.beginSession();
+       
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+        
+        Set<Reserva> ans = dpro.reservaEspe(semana);
+        
+        df.commitTransaction();
+        
+        df.endSession();
+
+        return ans;
     }
 
     public void reservahorariovalido() throws ServiceFacadeException, PersistenceException, SQLException{

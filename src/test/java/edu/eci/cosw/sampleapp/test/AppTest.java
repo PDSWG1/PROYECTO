@@ -3,7 +3,6 @@ package edu.eci.cosw.sampleapp.test;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
-import edu.eci.pdsw.entities.Software;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServiceFacadeException;
 import edu.eci.pdsw.services.ServicesFacade;
@@ -206,7 +205,7 @@ public class AppTest {
         Iterator<Reserva> i = ans.iterator();
         while (i.hasNext()){
             Reserva r = i.next();
-            Assert.assertTrue("No es la misma información de Software", reservas.equals(r.getBloques()));
+            Assert.assertTrue("Ingreso los datos incorectos no debe poder hacerlo", reservas.equals(r.getBloques()));
         }
         
     }  
@@ -221,8 +220,29 @@ public class AppTest {
     @Test
     public void reservaNoMasDe6Horas() throws SQLException, ServiceFacadeException, PersistenceException{
         clearDB();
-        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-        Statement stmt = conn.createStatement();
+        
+        Profesor pr = new Profesor(Long.parseLong("2096724"), "Cesar Vega", "CEVE", "cesar.vega-f@mail.escuelaing.edu.co",Long.parseLong("3134723073"),Long.parseLong("1013622836"));
+        
+        Laboratorio lb = new Laboratorio("Plataformas", 30, "Nicolas Gomez");
+        
+        Date fc = new Date(2015, 11, 05);
+        
+        Set<Integer> reservas = new HashSet();
+        reservas.add(1);
+        reservas.add(2);
+        reservas.add(3);
+        reservas.add(4);
+        reservas.add(5);
+        
+        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas);
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        sf.insertReserva(rv);
+        
+        Set<Reserva> ans = sf.reservaEsperadar(1);
+        
+        Assert.assertTrue("Fallo la prueba si ingreso la reserva", ans.isEmpty());
     }
 
     @Test

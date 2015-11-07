@@ -6,6 +6,7 @@
 package edu.eci.pdsw.samples.persistence.jdbcimpl;
 
 import com.mysql.fabric.xmlrpc.base.Data;
+import edu.eci.pdsw.entities.Asignatura;
 import edu.eci.pdsw.samples.persistence.DaoFactory;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
@@ -44,14 +45,22 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         Reserva rv;
         Profesor pr;
         Laboratorio lb;
-        /**
+        Asignatura asi;
+        
+        ps = con.prepareStatement("SELECT rv.id, rv.fechaRadicado, rv.dia, rv.semana, rv.asignatura, "
+                + "rv.laboratorio_nombre, rv.profesores_codigo, pr.nombre, pr.codigoNombre, pr.email, "
+                + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado, asi.mnemonico, asi.nombre, asi.creditos "
+                + "FROM RESERVAS AS rv, PROFESORES AS pr, LABORATORIOS AS lb, ASIGNATURA AS asi"
+                + "WHERE rv.laboratorio_nombre = lb.nombre AND rv.profesores_codigo = pr.codigo "
+                + "AND rv.semana = ?");
+        ps.setInt(1, semana);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            pr = DaoFactory.getInstance(null).getDaoProfesor().getProfesor(rs.getInt(6));
+            asi = new Asignatura(rs.getString(15), rs.getString(16), rs.getInt(17));
+            pr = new Profesor(rs.getLong(7), rs.getString(8),  , null, semana, semana);
             lb = DaoFactory.getInstance(null).getDaoLaboratorio().getLaboratorio(rs.getString(5));
             //rv = new Reserva(rs.getInt(1), rs.getDate(2), pr, lb);
         }
-        * */
         return ans;
         
     }
