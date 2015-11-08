@@ -1,88 +1,80 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2015-10-29 20:52:40.261
-
 -- tables
 -- Table ASIGNATURAS
-CREATE TABLE ASIGNATURAS(
-    mnemonico varchar(5)  NOT NULL,
-    nombre varchar(200)  NOT NULL,
-    creditos int  NOT NULL,
-    CHECK (creditos>0),
-    CONSTRAINT asignaturas_pk PRIMARY KEY (mnemonico)
-);
+CREATE TABLE IF NOT EXISTS `ASIGNATURAS`(
+	`mnemonico` VARCHAR(5) NOT NULL,
+	`nombre` VARCHAR(200) NOT NULL,
+	`creditos` INT NOT NULL,
+	PRIMARY KEY (`mnemonico`))
+ENGINE = InnoDB;
 
 -- Table BLOQUES
-CREATE TABLE BLOQUES(
-    reservas_id int  NOT NULL,
-    numero int  NOT NULL,
-    CONSTRAINT bloques_pk PRIMARY KEY (reservas_id,numero)
-);
+CREATE TABLE IF NOT EXISTS `BLOQUES`(
+	`reservas_id` BIGINT NOT NULL,
+	`numero` INT NOT NULL,
+	PRIMARY KEY (`reservas_id`, `numero`))
+ENGINE = InnoDB;
 
 -- Table LABSOFT
-CREATE TABLE LABSOFT(
-    laboratorio_nombre varchar(200)  NOT NULL,
-    softwares_nombre varchar(200)  NOT NULL,
-    CONSTRAINT labSoft_pk PRIMARY KEY (laboratorio_nombre,softwares_nombre)
-);
+CREATE TABLE IF NOT EXISTS `LABSOFT`(
+	`laboratorio_nombre` VARCHAR(200)  NOT NULL,
+	`softwares_nombre` VARCHAR(200)  NOT NULL,
+	PRIMARY KEY (`laboratorio_nombre`,`softwares_nombre`))
+ENGINE = InnoDB;
 
 -- Table LABORATORIOS
-CREATE TABLE LABORATORIOS(
-    nombre varchar(200)  NOT NULL,
-    numComputadores int  NOT NULL,
-    encargado varchar(200)  NOT NULL,
-    CONSTRAINT laboratorio_pk PRIMARY KEY (nombre)
-);
+CREATE TABLE IF NOT EXISTS `LABORATORIOS`(
+	`nombre` VARCHAR(200) NOT NULL,
+	`numComputadores` INT NOT NULL,
+	`encargado` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`nombre`))
+ENGINE = InnoDB;
 
 -- Table PROFESORES
-CREATE TABLE PROFESORES(
-    codigo int  NOT NULL,
-    nombre varchar(200)  NOT NULL,
-    codigoNombre varchar(5)  NOT NULL,
-    email varchar(200)  NOT NULL,
-    telefono int  NULL,
-    cedula int  NOT NULL,
-    CONSTRAINT profesores_pk PRIMARY KEY (codigo)
-);
+CREATE TABLE IF NOT EXISTS `PROFESORES`(
+	`codigo` BIGINT NOT NULL,
+	`nombre` VARCHAR(200) NOT NULL,
+	`codigoNombre` VARCHAR(5) NOT NULL,
+	`email` VARCHAR(200) NOT NULL,
+	`telefono` BIGINT NULL,
+	`cedula` BIGINT NOT NULL,
+	PRIMARY KEY (`codigo`))
+ENGINE = InnoDB;
 
 -- Table PROFESORESASIGNATURAS
-CREATE TABLE PROFESORESASIGNATURAS(
-    profesores_codigo int  NOT NULL,
-    asignaturas_mnemonico varchar(5)  NOT NULL,
-    CONSTRAINT profesoresAsignaturas_pk PRIMARY KEY (profesores_codigo,asignaturas_mnemonico)
-);
+CREATE TABLE IF NOT EXISTS `PROFESORESASIGNATURAS`(
+	`profesores_codigo` BIGINT NOT NULL,
+	`asignaturas_mnemonico` VARCHAR(5)  NOT NULL,
+	PRIMARY KEY (`profesores_codigo`,`asignaturas_mnemonico`))
+ENGINE = InnoDB;
 
 -- Table RESERVAS
-CREATE TABLE RESERVAS(
-    id int  NOT NULL,
-    fechaRadicado date  NOT NULL,
-    dia int NOT NULL,
-    semana int NOT NULL,
-    asignatura varchar(5) NOT NULL,
-    laboratorio_nombre varchar(200)  NOT NULL,
-    profesores_codigo int  NOT NULL,
-    CHECK (0 < dia and dia < 7),
-    CHECK (0 < semana and semana < 17),
-    CONSTRAINT reservas_pk PRIMARY KEY (id)
-);
+CREATE TABLE IF NOT EXISTS `RESERVAS`(
+	`id` BIGINT NOT NULL,
+	`fechaRadicado` DATE NOT NULL,
+	`dia` INT NOT NULL,
+	`semana` INT NOT NULL,
+	`asignatura` VARCHAR(5) NOT NULL,
+	`laboratorio_nombre` VARCHAR(200)  NOT NULL,
+	`profesores_codigo` BIGINT NOT NULL,
+	PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 -- Table SOFTWARES
-CREATE TABLE SOFTWARES(
-    nombre varchar(200)  NOT NULL,
-    licencia varchar(500)  NOT NULL,
-    version varchar(10)  NOT NULL,
-    urlDown varchar(500)  NOT NULL,
-    CONSTRAINT softwares_pk PRIMARY KEY (nombre)
-);
+CREATE TABLE IF NOT EXISTS `SOFTWARES`(
+	`nombre` VARCHAR(200)  NOT NULL,
+	`licencia` VARCHAR(500)  NOT NULL,
+	`version` VARCHAR(10)  NOT NULL,
+	`urlDown` VARCHAR(500)  NOT NULL,
+	PRIMARY KEY (`nombre`))
+ENGINE = InnoDB;
 
 -- Table SOLICITUDES
-CREATE TABLE SOLICITUDES(
-    id int  NOT NULL,
-    fecha date  NOT NULL,
-    estado bool  NOT NULL,
-    profesor int  NOT NULL,
-    comentario varchar(500)  NULL,
-    profesores_codigo int  NOT NULL,
-    laboratorio_nombre varchar(200)  NOT NULL,
-    CONSTRAINT solicitudes_pk PRIMARY KEY (id)
-);
-
+CREATE TABLE IF NOT EXISTS `SOLICITUDES`(
+	`id` INT NOT NULL,
+	`fecha` DATE NOT NULL,
+	`estado` BOOLEAN NOT NULL,
+	`comentario` VARCHAR(500)  NULL,
+	`profesores_codigo` BIGINT NOT NULL,
+	`laboratorio_nombre` VARCHAR(200)  NOT NULL,
+	PRIMARY KEY (`id`))
+ENGINE = InnoDB;

@@ -34,15 +34,7 @@ public class JDBCDaoProfesor implements DaoProfesor{
      */
     @Override
     public Profesor getProfesor(int n) throws SQLException, PersistenceException{
-        PreparedStatement ps;
-        Profesor pro = null;
-        ps = con.prepareStatement("SELECT codigo, nombre, codigoNombre, email, telefono, cedula FROM profesores WHERE codigo = ?");
-        ps.setInt(1, n);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()){
-            pro = new Profesor(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6));
-        }
-        return pro;
+        return null;
     }
         
 }

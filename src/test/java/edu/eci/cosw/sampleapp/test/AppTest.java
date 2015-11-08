@@ -49,11 +49,6 @@ public class AppTest {
         conn.close();
     }
 
-    @Test
-    public void sampleTest() {
-          //fail("No hay pruebas implementadas");	
-    }
-
     /**
      * --> semana es valido (1 <= semana <=16 y !(1 <= semana <=16))
      * @throws SQLException
@@ -62,7 +57,7 @@ public class AppTest {
      */
     @Test
     public void semanaValida() throws SQLException, ServiceFacadeException, PersistenceException {
-        //clearDB();
+        clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
         stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
@@ -89,7 +84,7 @@ public class AppTest {
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 4)");
                 
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
                 + "VALUES (2, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
         
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
@@ -107,7 +102,7 @@ public class AppTest {
     }
 
     /**
-     * --> Seleccione la información de un laboratorio(verificando el numero de equipos y software disponibles)
+     * --> Seleccione la informaciÃ³n de un laboratorio(verificando el numero de equipos y software disponibles)
      * @throws SQLException
      * @throws ServiceFacadeException
      * @throws PersistenceException
@@ -144,9 +139,9 @@ public class AppTest {
         nombres.add("Unity");
         nombres.add("Python");
         
-        Assert.assertTrue("No es la misma información de Software", nombres.equals(ans.getLabsoftware()));
+        Assert.assertTrue("No es la misma informaciÃ³n de Software", nombres.equals(ans.getLabsoftware()));
     }   
-    
+
     /**
      * --> verificar la reserva de que sea posible realizarla(no en bloque montado).
      * @throws SQLException
