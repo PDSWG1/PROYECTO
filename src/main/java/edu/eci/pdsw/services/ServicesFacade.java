@@ -66,11 +66,26 @@ public class ServicesFacade {
 
         return ans;
     }
-
-    public void reservahorariovalido() throws ServiceFacadeException, PersistenceException, SQLException{
+    /**
+     *
+     * @param rv todos los datos de la reserva a consultar
+     * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los parametros institucionales
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     * @throws SQLException
+     */
+    public void reservahorariovalido(Reserva rv) throws ServiceFacadeException, PersistenceException, SQLException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    public void reservabloquevalido()  throws SQLException, ServiceFacadeException, PersistenceException {
+    /**
+     *
+     * @param rv todos los datos de la reserva a consultar
+     * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los parametros institucionales
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     * @throws SQLException
+     */
+    public void reservabloquevalido(Reserva rv)  throws SQLException, ServiceFacadeException, PersistenceException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
     }
     public void semanavalido()  throws SQLException, ServiceFacadeException, PersistenceException {
