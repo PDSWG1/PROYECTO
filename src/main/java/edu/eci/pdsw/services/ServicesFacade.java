@@ -12,7 +12,11 @@ import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
+import static java.lang.reflect.Array.set;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
@@ -76,19 +80,75 @@ public class ServicesFacade {
      * @throws PersistenceException
      * @throws SQLException
      */
-    public void reservahorariovalido(Reserva rv) throws ServiceFacadeException, PersistenceException, SQLException{
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean reservaHorarioValido(Reserva rv) throws ServiceFacadeException, PersistenceException, SQLException{
+        //iter variable que contiene el set de bloques
+        Set<Integer> iter=rv.getBloques();
+        //variable de salida tipo booleano
+        boolean bol = true;
+        for(Integer r:iter) {      
+            if (!(r>0 && r<9)){
+                bol=false;
+                break;
+            }
+        }
+        return bol;
+        
     }
     /**
      *
      * @param rv todos los datos de la reserva a consultar
-     * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los parametros institucionales
+     * @return Bool (True) si el bloque no esta caducado, Bool(False) si el bloque  esta caducado
      * @throws ServiceFacadeException
      * @throws PersistenceException
      * @throws SQLException
      */
-    public void reservabloquevalido(Reserva rv)  throws SQLException, ServiceFacadeException, PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
+    /**
+    public boolean reservabloquevalido(Reserva rv)  throws SQLException, ServiceFacadeException, PersistenceException {
+        //iter variable que contiene el set de bloques
+        Set<Integer> iter=rv.getBloques();
+        //variable de salida tipo booleano
+        boolean bol = true;
+        Calendar calendario = new GregorianCalendar();
+        int hora = calendario.get(Calendar.HOUR_OF_DAY);
+        int minutos = calendario.get(Calendar.MINUTE);
+        for(Integer r:iter) {      
+            if (!(r>0 && r<9)){
+                bol=false;
+                break;
+            }
+        }
+        return bol;
+
+        
+    }
+    **/
+    public Set<String> transformadorBloque(int bloque){
+        Set<String> bloques=new LinkedHashSet();
+        if (bloque==1){
+            bloques.add("7:00am-8:30am");   
+        }
+        else if (bloque==2){
+            bloques.add("8:30am-10:00am");   
+        }
+        else if (bloque==3){
+            bloques.add("10:00am-11:30pm");   
+        }
+        else if (bloque==4){
+            bloques.add("11:30pm-1:00pm");   
+        }
+        else if (bloque==5){
+            bloques.add("1:00pm-2:30pm");   
+        }
+        else if (bloque==6){
+            bloques.add("2:30pm-4:00pm");   
+        }
+        else if (bloque==7){
+            bloques.add("4:00pm-5:30pm");   
+        }
+        else if (bloque==8){
+            bloques.add("5:30pm-7:00pm");   
+        }
+        return bloques;
     }
     public void semanavalido()  throws SQLException, ServiceFacadeException, PersistenceException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 

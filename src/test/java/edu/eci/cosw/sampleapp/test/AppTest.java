@@ -9,10 +9,13 @@ import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServiceFacadeException;
 import edu.eci.pdsw.services.ServicesFacade;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
@@ -175,7 +178,7 @@ public class AppTest {
         }
         Assert.assertTrue("No es la misma informacion de Software", cont == 1 && cont1 == 1);
     }   
-
+    
     /**
      * --> verificar la reserva de que sea posible realizarla(no en bloque montado).
      * @throws SQLException
@@ -349,6 +352,33 @@ public class AppTest {
 
         
     }
+    
+    
+    @Test
+     public void semanaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (5, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Redes', 20, 'Nicolas Gomez')");
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
+          
+        ServicesFacade sf = ServicesFacade.getInstance("");
+        semanaValido();
+     }
+     @Test
+     public void repiclarReservaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
+        clearDB();
+        
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        //Profesor pr=new Profesor(2096129,'Joseph Arboleda','JNAD' ,'joseph.arboleda@mail.escuelaing.edu.co' ,3118331935,1013658663);
+           
+     }
+     
     /**
      * --> verificar que el bloque  de la reserva no haya caducado(el bloque no haya vencido)
      *
@@ -362,8 +392,8 @@ public class AppTest {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (10, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,bloques)"
+                + "VALUES (10, NOW(), 2, 4, 'PDSW', 'Redes', 2096129,6)");
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Redes', 20, 'Nicolas Gomez')");
         stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
@@ -398,32 +428,57 @@ public class AppTest {
         
         
     }
-    
+    **/
+    /**
+     * --> verificar que el horario  de la reserva este dentro del margen del horario institucional (7am-7pm)
+     *
+     * @throws java.sql.SQLException
+     * @throws edu.eci.pdsw.services.ServiceFacadeException
+     * @throws edu.eci.pdsw.samples.persistence.PersistenceException
+     **/
     @Test
-     public void semanaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
+    public void reservaHorarioValido() throws SQLException, ServiceFacadeException, PersistenceException {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (5, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,bloques)"
+                + "VALUES (9, NOW(), 2, 4, 'PDSW', 'Redes', 2096129,0)");
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Redes', 20, 'Nicolas Gomez')");
         stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
                 + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
-          
-        ServicesFacade sf = ServicesFacade.getInstance("");
-        semanaValido();
-     }
-     @Test
-     public void repiclarReservaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
-        clearDB();
         
-        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-        Statement stmt = conn.createStatement();
-        //Profesor pr=new Profesor(2096129,'Joseph Arboleda','JNAD' ,'joseph.arboleda@mail.escuelaing.edu.co' ,3118331935,1013658663);
-           
-     }
-    
+        Set<Asignatura> asig = new LinkedHashSet<>();
+        Set<Software> soft = new LinkedHashSet<>();
+                
+        Asignatura asign = new Asignatura("PDSW", "Proceso de Desarrollo de Software", 4);               
+        
+        asig.add(asign);
+        Profesor pr = new Profesor(Long.parseLong("2096129"), "Joseph Arboleda", "JNAD", "joseph.arboleda@mail.escuelaing.edu.co",Long.parseLong("3118331935"),Long.parseLong("1013658663"), asig);
+        Software sof = new Software("Blender", "6", "2.76", "https://www.blender.org/download/");
+        soft.add(sof);
+        Laboratorio lb = new Laboratorio("Redes", 20, "Nicolas Gomez", soft);
+        
+        Date fc = new Date(2015, 11, 05);
+        
+        Set<Integer> reservas = new HashSet(0);
+                
+        Reserva rv = new Reserva(10, fc, pr, lb, 1, 4, reservas, asign);
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        sf.insertReserva(rv);
+        Set<Reserva> ans=sf.reservaEsperadar(1);
+        boolean bol=true;
+        for(Reserva r:ans) {
+            if (r.getId()==rv.getId()){
+                bol =false;
+            }
+        }   
+        Assert.assertTrue("Fallo la prueba la reserva no tiene un bloque valido",bol);
+
+        
+    }
     
 } 
 
