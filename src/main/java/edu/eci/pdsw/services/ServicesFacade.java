@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
@@ -169,8 +170,53 @@ public class ServicesFacade {
         return ans;
     }
 
-    public void insertReserva(Reserva rv) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void insertReserva(Reserva rv) throws PersistenceException, SQLException, ServiceFacadeException {
+        if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv)){
+            DaoFactory df = DaoFactory.getInstance(properties);
+
+            df.beginSession();
+
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+            dpro.insertReserva(rv);
+
+            df.commitTransaction();
+
+            df.endSession();
+        }
+        
     }
 
+    private boolean reservaSemanaDiaValido(Reserva rv) throws PersistenceException, SQLException{
+        boolean boo = true;
+        DaoFactory df = DaoFactory.getInstance(properties);
+
+        df.beginSession();
+
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+        Set<Reserva> ans = dpro.reservaLabSemanDia(rv.getLaboratorio().getNombreLab(), rv.getSemana(), rv.getDia());
+        
+        Iterator<Reserva> i = ans.iterator();
+        
+        while (i.hasNext()){
+            Reserva r = i.next();
+            boo = true;
+            Iterator<Integer> j = r.getBloques().iterator();
+            while (j.hasNext()){
+                boo &= rv.getBloques().contains(j.next());
+            }
+        }
+
+        df.commitTransaction();
+
+        df.endSession();
+        
+        return boo;
+    }
+
+    private boolean reservaNumBloquesValido(Reserva rv) {
+        int siz = rv.getBloques().size();
+        return (0 < siz && siz < 5);
+    }
 }

@@ -19,5 +19,9 @@ public interface DaoLaboratorio {
     public Set<Reserva> reservaEsperadar(int semana) throws SQLException, PersistenceException;
     
     public Laboratorio getLaboratorio(String nombre) throws SQLException;
+
+    public void insertReserva(Reserva rv) throws SQLException;
+
+    public Set<Reserva> reservaLabSemanDia(String laboratorio, int semana, int dia) throws SQLException;
     
 }
