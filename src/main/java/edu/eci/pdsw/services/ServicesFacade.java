@@ -52,18 +52,20 @@ public class ServicesFacade {
      * @throws SQLException
      */
     public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
-        DaoFactory df = DaoFactory.getInstance(properties);
+        Set<Reserva> ans = null;
+        if (0 < semana && semana < 17) {
+            DaoFactory df = DaoFactory.getInstance(properties);
         
-        df.beginSession();
+            df.beginSession();
        
-        DaoLaboratorio dpro = df.getDaoLaboratorio();
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
         
-        Set<Reserva> ans = dpro.reservaEsperadar(semana);
+            ans = dpro.reservaEsperadar(semana);
         
-        df.commitTransaction();
+            df.commitTransaction();
         
-        df.endSession();
-
+            df.endSession();
+        }
         return ans;
     }
     /**
@@ -92,8 +94,19 @@ public class ServicesFacade {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
     }
 
-    public Laboratorio infoLaboratorio(String nombre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Laboratorio infoLaboratorio(String nombre) throws PersistenceException, SQLException {
+        DaoFactory df = DaoFactory.getInstance(properties);
+
+        df.beginSession();
+
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+        Laboratorio ans = dpro.getLaboratorio(nombre);
+
+        df.commitTransaction();
+
+        df.endSession();
+        return ans;
     }
 
     public void insertReserva(Reserva rv) {

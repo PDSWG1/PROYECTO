@@ -17,7 +17,6 @@ import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
 import edu.eci.pdsw.entities.Software;
-import java.math.BigInteger;
 import java.util.LinkedHashSet;
 
 /**
@@ -32,7 +31,6 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         this.con = con;
     }
     
-    private BigInteger pBig(long s){return BigInteger.valueOf(s);}
     private int pint(String s){return Integer.parseInt(s);}
     /**
      *
@@ -43,18 +41,15 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
      */
     @Override
     public Set<Reserva> reservaEsperadar(int semana) throws SQLException, PersistenceException{
-        System.out.println("  ");
         PreparedStatement ps;
         Set<Reserva> ans = new LinkedHashSet<>();
-        Set<Asignatura> asis = new LinkedHashSet<>();
-        Set<Integer> blo = new LinkedHashSet<>();
-        Set<Software> sos = new LinkedHashSet<>();
         Reserva rv; 
         Profesor pr;
         Laboratorio lb;
         Asignatura asi = null;
         Software soft;
         
+        //Consulta de las reservas que existen en la semana ingresada como parámetro 
         ps = con.prepareStatement("SELECT rv.id, rv.fechaRadicado, rv.dia, rv.semana, rv.asignatura, "
                 + "rv.laboratorio_nombre, rv.profesores_codigo, pr.nombre, pr.codigoNombre, pr.email, "
                 + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado "
@@ -64,7 +59,9 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         ps.setInt(1, semana);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            System.out.println(rs.toString());
+            Set<Asignatura> asis = new LinkedHashSet<>();
+            Set<Integer> blo = new LinkedHashSet<>();
+            Set<Software> sos = new LinkedHashSet<>();
             /**
              * rv.id --> 1 BIGINT
              * rv.fechaRadicado --> 2 DATE
@@ -81,26 +78,27 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
              * lb.numComputadores --> 13 INT
              * lb.encargado --> 14 STRING
              */
-            ps = con.prepareStatement("SELECT pro.profesores_codigo, asi.mnemonico, asi.nombre, asi.creditos "
-                    + "FROM ASIGNATURAS AS asi,  PROFESORESASIGNATURAS AS pro"
+            
+            //Consulta y creación de las asignaturas del profesor 
+            ps = con.prepareStatement("SELECT asi.mnemonico, asi.nombre, asi.creditos "
+                    + "FROM ASIGNATURAS AS asi,  PROFESORESASIGNATURAS AS pro "
                     + "WHERE asi.mnemonico = pro.asignaturas_mnemonico "
                     + "AND pro.profesores_codigo = ?");
             ps.setLong(1, rs.getLong(7));
             ResultSet rs1 = ps.executeQuery();
             while (rs1.next()){
-                System.out.println(rs1.toString());
                 /**
-                 * pro.profesores_codigo --> 1 BIGINT
-                 * asi.mnemonico --> 2 STRING
-                 * asi.nombre --> 3 STRING
-                 * asi.creditos --> 4 INT
+                 * asi.mnemonico --> 1 STRING
+                 * asi.nombre --> 2 STRING
+                 * asi.creditos --> 3 INT
                  */
-                asi = new Asignatura(rs1.getString(2), rs1.getString(3), rs1.getInt(4));
+                asi = new Asignatura(rs1.getString(1), rs1.getString(2), rs1.getInt(3));
                 asis.add(asi);
             }
             
             pr = new Profesor(rs.getLong(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getLong(11), rs.getLong(12), asis);
             
+            //consulta y creación de los software que tiene cada laboratorio 
             ps = con.prepareStatement("SELECT lab.laboratorio_nombre, soft.nombre, soft.licencia, soft.version, soft.urlDown "
                     + "FROM LABSOFT AS lab, SOFTWARES AS soft "
                     + "WHERE lab.softwares_nombre = soft.nombre "
@@ -108,7 +106,6 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
             ps.setString(1, rs.getString(6));
             rs1 = ps.executeQuery();
             while (rs1.next()){
-                System.out.println(rs1.toString());
                 /**
                  * lab.laboratorio_nombre --> 1 BIGINT
                  * soft.nombre --> 2 STRING
@@ -116,19 +113,19 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                  * soft.version --> 4 INT
                  * soft.urlDown --> 5 STRING
                  */
-                soft = new Software(rs1.getString(2), rs1.getString(3), rs1.getString(3), rs1.getString(5));
+                soft = new Software(rs1.getString(2), rs1.getString(3), rs1.getString(4), rs1.getString(5));
                 sos.add(soft);
             }
             
             lb = new Laboratorio(rs.getString(6), rs.getInt(13), rs.getString(14), sos);
             
+            //consulta y creación de los horarios(Bloques) de cada reserva 
             ps = con.prepareStatement("SELECT reservas_id, numero "
                     + "FROM BLOQUES "
                     + "WHERE reservas_id = ?");
-            ps.setInt(1, rs.getInt(1));
+            ps.setInt(1, pint(rs.getString(1)));
             rs1 = ps.executeQuery();
             while (rs1.next()){
-                System.out.println(rs1.toString());
                 /**
                  * reservas_id --> 1 BIGINT
                  * numero --> 2 INT
@@ -136,22 +133,24 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                 blo.add(rs1.getInt(2));
             }
             
+            //Consulta y creación de la asignatura de la cual se hizo la reserva del laboratorio 
             ps = con.prepareStatement("SELECT mnemonico, nombre, creditos "
                     + "FROM ASIGNATURAS "
                     + "WHERE mnemonico = ?");
             ps.setString(1, rs.getString(5));
             rs1 = ps.executeQuery();
             while (rs1.next()){
-                System.out.println(rs1.toString());
                 /**
                  * mnemonico --> 1 STRING
                  * nombre --> 2 STRING
                  * creditos --> 3 INT
                  */
-                asi = new Asignatura(rs1.getString(2), rs1.getString(3), rs1.getInt(4));
+                asi = new Asignatura(rs1.getString(1), rs1.getString(2), rs1.getInt(3));
             }
             
-            rv = new Reserva(rs.getInt(1), rs.getDate(2), pr, lb, semana, rs.getInt(2), blo, asi);
+            //creación de la reserva
+            rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi);
+            ans.add(rv);
         }
         return ans;
         
@@ -165,18 +164,41 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
      */
     @Override
     public Laboratorio getLaboratorio(String nombre) throws SQLException{
-        /**
         Laboratorio lb = null;
+        Software so;
         PreparedStatement ps;
-        ps = con.prepareStatement("SELECT nombre, numComputadores, encargado FROM laboratorio WHERE  nombre = ?");
+        
+        ps = con.prepareStatement("SELECT nombre, numComputadores, encargado "
+                + "FROM LABORATORIOS "
+                + "WHERE nombre = ?");
         ps.setString(1, nombre);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            lb = new Laboratorio(rs.getString(1), rs.getInt(2), rs.getString(3));
+            Set<Software> sos = new LinkedHashSet<>();
+            /**
+             * lb.nombre --> 1
+             * lb.numComputadores --> 2
+             * lb.encargado --> 3
+             **/
+            ps = con.prepareStatement("SELECT sof.nombre, sof.licencia, sof.version, sof.urlDown "
+                + "FROM LABSOFT AS ls, SOFTWARES AS sof "
+                + "WHERE ls.softwares_nombre = sof.nombre "
+                + "AND ls.laboratorio_nombre = ?");
+            ps.setString(1, nombre);
+            ResultSet rs1 = ps.executeQuery();
+            while (rs1.next()){
+                /**
+                 * sof.nombre --> 1
+                 * sof.licencia --> 2
+                 * sof.version --> 3 
+                 * sof.urlDown --> 4
+                 */
+                so = new Software(rs1.getString(1), rs1.getString(2), rs1.getString(3), rs1.getString(4));
+                sos.add(so);
+            }
+            lb = new Laboratorio(rs.getString(1), rs.getInt(2), rs.getString(3), sos);
         }
         return lb;
-        **/
-        return null;
     }
     
     

@@ -7,7 +7,6 @@ package edu.eci.pdsw.entities;
 
 
 import java.sql.Date;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -43,7 +42,13 @@ public class Reserva {
         this.semana = semana;
     }
     
-    
+    public Asignatura getAsignatura() {
+        return asignatura;
+    }
+
+    public void setAsignatura(Asignatura asignatura) {
+        this.asignatura = asignatura;
+    }
     
     public int getId() {
         return id;

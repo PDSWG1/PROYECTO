@@ -9,13 +9,10 @@ import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServiceFacadeException;
 import edu.eci.pdsw.services.ServicesFacade;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Assert;
@@ -49,6 +46,9 @@ public class AppTest {
         conn.close();
     }
 
+    //funcion de conversion rapida
+    private long pLong(String s){return Long.parseLong(s);}
+    
     /**
      * --> semana es valido (1 <= semana <=16 y !(1 <= semana <=16))
      * @throws SQLException
@@ -95,10 +95,31 @@ public class AppTest {
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         int semana = 17;
         Set<Reserva> ans = sf.reservaEsperadar(semana);
-        Assert.assertTrue("No es valia la semana", ans.isEmpty());
+        Assert.assertTrue("No es valia la semana realiza la consulta con una semana invalida", ans == null);
         semana = 1;
         ans = sf.reservaEsperadar(semana);
-        Assert.assertTrue("No es valia la semana", ans.size()==2);
+        Iterator<Reserva> i = ans.iterator();
+        int a = 1;
+        while(i.hasNext()){
+            Reserva rv = i.next();
+            Profesor pro = rv.getProfesor();
+            Assert.assertTrue("Profesor no valido",pro.getCodigo() == 2096724 
+                    && pro.getNombre().equals("Cesar Vega") 
+                    && pro.getCodigoNombre().equals("CEVE") 
+                    && pro.getEmail().equals("cesar.vega-f@mail.escuelaing.edu.co") 
+                    && pro.getTelefono() == pLong("3134723073") 
+                    && pro.getCedula() == pLong("1013622836"));
+            Laboratorio lab = rv.getLaboratorio();
+            Assert.assertTrue("Laboratorio no valido", lab.getNombreLab().equals("Plataformas")
+                    && lab.getNumerocomputadores() == 30
+                    && lab.getEncargado().equals("Nicolas Gomez"));
+            Assert.assertTrue("ID no valido", rv.getId() == 1 || rv.getId() == 2);
+            Assert.assertTrue("Bloque no valido", rv.getBloques().size() == ((rv.getId() == 1)? 4: 2));
+            Assert.assertTrue("Asignatura no valido", rv.getAsignatura().getId().equals("PDSW"));
+            Assert.assertTrue("Semana no valido", rv.getSemana() == 1);
+            Assert.assertTrue("Dia no valido", rv.getDia() == 3);
+        }
+        
     }
 
     /**
@@ -107,7 +128,6 @@ public class AppTest {
      * @throws ServiceFacadeException
      * @throws PersistenceException
      */
-    /**
     @Test
     public void informacionLaboratorio() throws SQLException, ServiceFacadeException, PersistenceException {   
         clearDB();
@@ -133,13 +153,27 @@ public class AppTest {
        
         String nombre = "Plataformas";
         Laboratorio ans = sf.infoLaboratorio(nombre);
-        Assert.assertTrue("No es valia la semana", ans.getNumerocomputadores()==30);
         
-        Set<String> nombres = new HashSet(); // para comparar
-        nombres.add("Unity");
-        nombres.add("Python");
-        
-        Assert.assertTrue("No es la misma informaciÃ³n de Software", nombres.equals(ans.getLabsoftware()));
+        Assert.assertTrue("El numero de computadores no es valido", ans.getNumerocomputadores()==30);
+        Assert.assertTrue("El encargado no es valido", ans.getEncargado().equals("Nicolas Gomez"));
+       
+        Iterator<Software> i = ans.getLabsoftware().iterator();
+        int cont = 0, cont1 = 0;
+        while (i.hasNext()){
+            Software so = i.next();
+            if (so.getNombre().equals("Unity")){
+                cont++;
+                Assert.assertTrue("No es la misma informacion de Software Unity", so.getLicencia().equals("5") 
+                        && so.getVersion().equals("5.6") 
+                        && so.getUrlDown().equals("http://unity3d.com/es/get-unity/download"));
+            }else{
+                cont1++;
+                Assert.assertTrue("No es la misma informacion de Software Python", so.getLicencia().equals("3") 
+                        && so.getVersion().equals("3.4") 
+                        && so.getUrlDown().equals("http://unity3d.com/es/get-unity/download"));
+            }
+        }
+        Assert.assertTrue("No es la misma informacion de Software", cont == 1 && cont1 == 1);
     }   
 
     /**
