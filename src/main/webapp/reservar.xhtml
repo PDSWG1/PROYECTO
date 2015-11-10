@@ -18,7 +18,8 @@ and open the template in the editor.
             <p:growl id="msgs" showDetail="true" />
 
             <p:layout style="min-width:800px;min-height:720px;">
-            <!-- Semana a buscar -->
+
+                <!-- Semana a buscar -->
                 <p:layoutUnit position="west" resizable = "true" size="480" minSize="80" maxSize="500">
 
                     <p:outputLabel for="labs" value="Elija una semana:" />
@@ -58,41 +59,65 @@ and open the template in the editor.
                         <p:outputPanel style="text-align: center;" layout="block">
                          #{lab.nombreLab}
                         <br />
-                            <p:commandButton update=":reserva:infoLabs" icon="ui-icon-search" title="View" oncomplete="PF('carDialog').show();">
+                            <p:commandButton update=":reserva:infoLabs" icon="ui-icon-search" title="View" oncomplete="PF('LabsInfo').show();">
                                     <f:setPropertyActionListener value="#{lab}" target="#{beanReserva.selectedLaboratorio}" />
                             </p:commandButton>
                         </p:outputPanel>
                     </p:ring>
+                       
                     
                 </p:layoutUnit>
             
-                <p:layoutUnit position="south" resizable = "true" size="420" minSize="100" maxSize="500">
-                    Aquí se reservarán los horarios
+                <!--Tabla con reservas con información-->
+                <p:layoutUnit position="south" resizable = "true"  size="360" minSize="80" maxSize="400" style="height:25px;">
+                    Aqui van las reservas
+                    <p:dataTable id="horarios" var="hor" value="#{beanHorario.laboratorios}">
+                        <f:facet name="Horarios disponibles para reservar en la fecha consultada">
+                            Horarios disponibles en la fecha consultada
+                        </f:facet>
+                        <p:column headerText="Bloque">
+                            <h:outputText value="#{hor.nombreLab}" />
+                        </p:column>
+
+                        <p:column headerText="Laboratorios">
+                            <p:dataTable
+                                value="#{beanHorario.laboratorios}"
+                                var="f">
+                                <p:column>#{f.nombreLab}</p:column>
+                            </p:dataTable>
+                        </p:column>
+                        
+                        <p:column headerText="Laboratorios">
+                            <h:outputText value="#{hor.encargado}" />
+                        </p:column>
+                        
+                    </p:dataTable>
                 </p:layoutUnit>
                
             </p:layout>
-            
-             <p:dialog header="Informacion de Laboratorio Elegido" widgetVar="infoLab" modal="true" showEffect="fade" hideEffect="fade" resizable="true">
-                <p:outputPanel id="infoLabs" style="text-align:center;">
-                    <p:panelGrid  columns="2" rendered="#{not empty beanReserva.selectedLaboratorio}" columnClasses="label,value">
-                        <!--<f:facet name="header">
-                            <p:graphicImage name="demo/images/car/#{carouselView.selectedCar.brand}-big.gif"/> 
-                        </f:facet>-->
+                           
+            <!--Cuadro de dialogo con información-->
+            <p:dialog header="Informacion de Laboratorio Elegido" widgetVar="LabsInfo" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "500">
+                        <p:outputPanel id="infoLabs" style="text-align:center;" layout="block">
+                            <p:panelGrid  columns="2" rendered="#{not empty beanReserva.selectedLaboratorio}" columnClasses="label,value">
+                                <f:facet name="header">
+                                    <p:graphicImage library="resources" name="Laboratorio_de_Software-big.jpg"/> 
+                                </f:facet>
 
-                        <h:outputText value="Nombre de Laboratorio:" />
-                        <h:outputText value="#{beanReserva.selectedLaboratorio.nombreLab}" />
+                                <h:outputText value="Nombre de Laboratorio:" />
+                                <h:outputText value="#{beanReserva.selectedLaboratorio.nombreLab}" />
 
-                        <h:outputText value="Número de computadores" />
-                        <h:outputText value="#{beanReserva.selectedLaboratorio.numerocomputadores}" />
+                                <h:outputText value="Número de computadores" />
+                                <h:outputText value="#{beanReserva.selectedLaboratorio.numerocomputadores}" />
 
-                        <h:outputText value="Encargado de la sala:" />
-                        <h:outputText value="#{beanReserva.selectedLaboratorio.encargado}" />
+                                <h:outputText value="Encargado de la sala:" />
+                                <h:outputText value="#{beanReserva.selectedLaboratorio.encargado}" />
 
-                        <h:outputText value="Programas en la sala: " />
-                        <h:outputText value="#{beanReserva.selectedLaboratorio.labsoftware}" />
-                    </p:panelGrid>
-                </p:outputPanel>
-            </p:dialog>
+                                <h:outputText value="Programas en la sala: " />
+                                <h:outputText value="#{beanReserva.selectedLaboratorio.labsoftware}" />
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog> 
         </h:form>
     </h:body>
 </html>

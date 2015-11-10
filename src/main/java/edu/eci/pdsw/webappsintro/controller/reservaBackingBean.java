@@ -27,14 +27,14 @@ public class reservaBackingBean {
     
     @PostConstruct
     public void init() {
+        /*
         labs = new ArrayList<>();
-/**
+
         labs.add(new Laboratorio("Plataformas Computacionales", 20, "Johan Ramirez"));
         labs.add(new Laboratorio("Laboratorio de Software", 24, "Alejandra Blanco"));
-        labs.add(new Laboratorio("Redes", 20, "Cesar Vega"));
-        labs.add(new Laboratorio("Sala Doble", 40, "Tiffany Estupiñán"));**/
-        
-        
+        labs.add(new Laboratorio("Redes de Computadores", 20, "Cesar Vega"));
+        labs.add(new Laboratorio("Multimedia y Móviles", 18, "Luis Felipe Díaz"));
+        labs.add(new Laboratorio("Sala Inteligente", 30, "Tiffany Estupiñán"));  */
     }
     
     /*Getter del número de la semana universitaria

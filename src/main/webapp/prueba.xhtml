@@ -8,8 +8,7 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
         <title>TODO supply a title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,9 +16,7 @@ and open the template in the editor.
     <h:body>
         <div>Prueba</div>
         <p:layout style="min-width:400px;min-height:200px;">
-            <!--    
-                <p:commandButton value = "Consultar" actionListener="#{beanHorario.consultarH}" update = ":consultaH:horarios"></p:commandButton>
-                -->
+            
             <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200">
                 West
             </p:layoutUnit>
@@ -28,44 +25,30 @@ and open the template in the editor.
                 Center
             </p:layoutUnit>
                 
-                 <!-- Formato de muestra de reservas 
-                <p:layoutUnit position="center">
-                    <p:dataTable id="horarios" var="hor" value="#{beanHorario.reservas}">
-                        <f:facet name="Horarios disponibles en la fecha consultada">
-                            Horarios disponibles en la fecha consultada
-                        </f:facet>
-                        <p:column headerText="Semana">
-                            <h:outputText value="#{hor.semana}" />
-                        </p:column>
-                        <p:column headerText="Hora">
-                            <h:outputText value="#{hor.bloque}" />
-                        </p:column>
-                        <p:column headerText="Lunes">
-                            <h:outputText value="#{hor.lunes}" />
-                        </p:column>
-                        <p:column headerText="Martes">
-                            <h:outputText value="#{hor.martes}" />
-                        </p:column>
-                        <p:column headerText="Miercoles">
-                            <h:outputText value="#{hor.mier}" />
-                        </p:column>
-                        <p:column headerText="Jueves">
-                            <h:outputText value="#{hor.jueves}" />
-                        </p:column>
-                        <p:column headerText="Viernes">
-                            <h:outputText value="#{hor.viernes}" />
-                        </p:column>
-                        <p:column headerText="Sábado">
-                            <h:outputText value="#{hor.sabado}" />
-                        </p:column>
-                        <p:column style="width:32px;text-align: center">
-                             <p:commandButton update=":form:carDetail" oncomplete="PF('carDialog').show()" icon="ui-icon-search" title="View">
-                                <f:setPropertyActionListener value="#{car}" target="#{dtSelectionView.selectedCar}" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                </p:layoutUnit>
-                -->
+              <!--Formato de muestra de reservas -->
+            <p:layoutUnit position="center">
+                <p:dataTable id="horarios" var="hor" value="#{beanPruebas.laboratorios}">
+                    <f:facet name="Horarios disponibles en la fecha consultada">
+                        Horarios disponibles en la fecha consultada
+                    </f:facet>
+                    <p:column headerText="Id">
+                        <h:outputText value="#{hor.nombreLab}" />
+                    </p:column>
+
+                    <p:column headerText="Year">
+                        <h:outputText value="#{hor.encargado}" />
+                    </p:column>
+
+                    <p:column headerText="Brand">
+                        <p:dataTable
+                            value="#{beanPruebas.laboratorios}"
+                            var="f">
+                            <p:column>#{f.nombreLab}</p:column>
+                        </p:dataTable>
+                    </p:column>
+                </p:dataTable>
+            </p:layoutUnit>
+            -->
         </p:layout>
     </h:body>
 </html>

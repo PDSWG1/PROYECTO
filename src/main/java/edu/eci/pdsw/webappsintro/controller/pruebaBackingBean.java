@@ -7,7 +7,6 @@ package edu.eci.pdsw.webappsintro.controller;
 
 import edu.eci.pdsw.entities.Laboratorio;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -18,11 +17,10 @@ import javax.faces.bean.SessionScoped;
  * @author 2096898
  */
 
-@ManagedBean(name = "beanHorario")
+@ManagedBean(name = "beanPruebas")
 @SessionScoped
-public class horarioBackingBean {
-    private int semana = 0;
-    private String nomLaboratorio;
+public class pruebaBackingBean {
+    
     private List<Laboratorio> labs;
     private Laboratorio selectLabs;
     
@@ -37,38 +35,20 @@ public class horarioBackingBean {
         labs.add(new Laboratorio("Multimedia y Móviles", 18, "Luis Felipe Díaz"));
         labs.add(new Laboratorio("Sala Inteligente", 30, "Tiffany Estupiñán"));   */
     }
-    
-    /*Getter del número de la semana universitaria
-     * @return número de la semana universitaria
-     */
-    public int getSemana(){
-        return semana;
+
+    public Laboratorio getSelectedLaboratorio() {
+        return selectLabs;
     }
-    
-    /*Setter del número de la semana universitaria a buscar
-     * @param número de la semana universitaria a buscar
-     */
-    public void setSemana(int sem){
-        this.semana = sem;
-    }
-    
-    /*Getter del nombre de laboratorio que desea consultar
-     * @param elección del laboratorio que desea consultar
-     */
-    public String getNombLaboratorio() {
-        return nomLaboratorio;
-    }
-     
-    /*Setter del nombre de laboratorio que desea consultar
-     * @param elección del laboratorio que desea consultar
-     */
-    
-    public void setNombreLaboratorio(String nomLab){
-        this.nomLaboratorio = nomLab;
+ 
+    public void setSelectedLaboratorio(Laboratorio selectLab) {
+        this.selectLabs = selectLab;
     }
     
     public List<Laboratorio> getLaboratorios() {
         return labs;
     }
-    
+ 
+    public void setLaboratorios(List<Laboratorio> labs) {
+        this.labs = labs;
+    }
 }
