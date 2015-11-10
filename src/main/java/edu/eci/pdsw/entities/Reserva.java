@@ -5,7 +5,6 @@
  */
 package edu.eci.pdsw.entities;
 
-
 import java.sql.Date;
 import java.util.Set;
 
@@ -99,7 +98,4 @@ public class Reserva {
         this.dia = dia;
     }
 
-    
-    
-    
 }

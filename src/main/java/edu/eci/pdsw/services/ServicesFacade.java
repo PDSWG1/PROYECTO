@@ -12,10 +12,7 @@ import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.reflect.Array.set;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -57,21 +54,24 @@ public class ServicesFacade {
      * @throws SQLException
      */
     public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
-        Set<Reserva> ans = null;
-        if (0 < semana && semana < 17) {
+        if (semanaValida(semana)) {
             DaoFactory df = DaoFactory.getInstance(properties);
         
             df.beginSession();
        
             DaoLaboratorio dpro = df.getDaoLaboratorio();
         
-            ans = dpro.reservaEsperadar(semana);
+            Set<Reserva> ans = dpro.reservaEsperadar(semana);
         
             df.commitTransaction();
         
             df.endSession();
+            
+            return ans;
+        }else{
+            throw new ServiceFacadeException("Semana no valida");
         }
-        return ans;
+        
     }
     /**
      *
@@ -95,64 +95,42 @@ public class ServicesFacade {
         return bol;
         
     }
-    /**
-     *
-     * @param rv todos los datos de la reserva a consultar
-     * @return Bool (True) si el bloque no esta caducado, Bool(False) si el bloque  esta caducado
-     * @throws ServiceFacadeException
-     * @throws PersistenceException
-     * @throws SQLException
-     */
-    /**
-    public boolean reservabloquevalido(Reserva rv)  throws SQLException, ServiceFacadeException, PersistenceException {
-        //iter variable que contiene el set de bloques
-        Set<Integer> iter=rv.getBloques();
-        //variable de salida tipo booleano
-        boolean bol = true;
-        Calendar calendario = new GregorianCalendar();
-        int hora = calendario.get(Calendar.HOUR_OF_DAY);
-        int minutos = calendario.get(Calendar.MINUTE);
-        for(Integer r:iter) {      
-            if (!(r>0 && r<9)){
-                bol=false;
-                break;
-            }
-        }
-        return bol;
 
-        
-    }
+    /**
+     * @param bloque
+     * @return 
     **/
     public Set<String> transformadorBloque(int bloque){
         Set<String> bloques=new LinkedHashSet();
-        if (bloque==1){
-            bloques.add("7:00am-8:30am");   
-        }
-        else if (bloque==2){
-            bloques.add("8:30am-10:00am");   
-        }
-        else if (bloque==3){
-            bloques.add("10:00am-11:30pm");   
-        }
-        else if (bloque==4){
-            bloques.add("11:30pm-1:00pm");   
-        }
-        else if (bloque==5){
-            bloques.add("1:00pm-2:30pm");   
-        }
-        else if (bloque==6){
-            bloques.add("2:30pm-4:00pm");   
-        }
-        else if (bloque==7){
-            bloques.add("4:00pm-5:30pm");   
-        }
-        else if (bloque==8){
-            bloques.add("5:30pm-7:00pm");   
+        switch (bloque) {
+            case 1:
+                bloques.add("7:00am-8:30am");
+                break;
+            case 2:
+                bloques.add("8:30am-10:00am");
+                break;
+            case 3:
+                bloques.add("10:00am-11:30pm");
+                break;
+            case 4:
+                bloques.add("11:30pm-1:00pm");
+                break;
+            case 5:
+                bloques.add("1:00pm-2:30pm");
+                break;
+            case 6:
+                bloques.add("2:30pm-4:00pm");
+                break;
+            case 7:
+                bloques.add("4:00pm-5:30pm");
+                break;
+            case 8:   
+                bloques.add("5:30pm-7:00pm");
+                break;
+            default:
+                break;
         }
         return bloques;
-    }
-    public void semanavalido()  throws SQLException, ServiceFacadeException, PersistenceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
     }
 
     public Laboratorio infoLaboratorio(String nombre) throws PersistenceException, SQLException {
@@ -171,7 +149,7 @@ public class ServicesFacade {
     }
 
     public void insertReserva(Reserva rv) throws PersistenceException, SQLException, ServiceFacadeException {
-        if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv)){
+        if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv) && semanaValida(rv.getSemana())){
             DaoFactory df = DaoFactory.getInstance(properties);
 
             df.beginSession();
@@ -183,6 +161,8 @@ public class ServicesFacade {
             df.commitTransaction();
 
             df.endSession();
+        }else{
+            throw new ServiceFacadeException("No se pudo ingresar a la base de datos");
         }
         
     }
@@ -218,5 +198,9 @@ public class ServicesFacade {
     private boolean reservaNumBloquesValido(Reserva rv) {
         int siz = rv.getBloques().size();
         return (0 < siz && siz < 5);
+    }
+    
+    private boolean semanaValida(int semana){
+        return 0 < semana && semana < 17;
     }
 }

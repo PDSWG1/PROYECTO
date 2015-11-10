@@ -11,9 +11,6 @@ package edu.eci.pdsw.services;
  */
 public class ServiceFacadeException extends Exception {
 
-    public ServiceFacadeException() {
-    }
-
     public ServiceFacadeException(String message) {
         super(message);
     }
@@ -25,5 +22,4 @@ public class ServiceFacadeException extends Exception {
     public ServiceFacadeException(Throwable cause) {
         super(cause);
     }
-    
 }

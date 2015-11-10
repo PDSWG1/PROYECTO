@@ -5,10 +5,7 @@
  */
 package edu.eci.pdsw.entities;
 
-
-import java.util.LinkedHashSet;
 import java.util.Set;
-
 
 /**
  *
@@ -60,9 +57,5 @@ public class Laboratorio {
     public void setLabsoftware(Set<Software> labsoftware) {
         this.labsoftware = labsoftware;
     }
-    
-    
-    
-    
     
 }
