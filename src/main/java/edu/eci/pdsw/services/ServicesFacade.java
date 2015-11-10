@@ -132,7 +132,7 @@ public class ServicesFacade {
         }
         return bloques;
     }
-
+    
     public Laboratorio infoLaboratorio(String nombre) throws PersistenceException, SQLException {
         DaoFactory df = DaoFactory.getInstance(properties);
 
@@ -202,5 +202,28 @@ public class ServicesFacade {
     
     private boolean semanaValida(int semana){
         return 0 < semana && semana < 17;
+    }
+
+    public void insertReservaReplay(Reserva rv) throws PersistenceException, SQLException, ServiceFacadeException {
+        int semana=rv.getSemana();
+        int semanaReplay=rv.getSemana();
+        int idReplay=rv.getId();
+        boolean bol=true;
+        
+        for(int i=semana;i<17 && bol;i++){
+            rv.setSemana(i);
+            bol &= (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv));
+        }
+        
+        if (bol){
+            for(int i=semanaReplay;i<17 ;i++){               
+                rv.setSemana(i);
+                rv.setId(idReplay);                    
+                insertReserva(rv);
+                idReplay++;
+            }    
+        }else{
+            throw new ServiceFacadeException("No se ingreso la reserva");
+        }
     }
 }

@@ -10,7 +10,7 @@ package edu.eci.pdsw.services;
  * @author Cesar
  */
 public class ServiceFacadeException extends Exception {
-
+    
     public ServiceFacadeException(String message) {
         super(message);
     }
