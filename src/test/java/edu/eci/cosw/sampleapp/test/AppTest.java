@@ -303,78 +303,7 @@ public class AppTest {
         
         Assert.assertTrue("Fallo la prueba si ingreso la reserva", ans.isEmpty());
     }    
-<<<<<<< HEAD
-    
-=======
-    /**
-    @Test
-     public void semanaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
-        clearDB();
-        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-        Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (5, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
-        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
-                + "VALUES ('Redes', 20, 'Nicolas Gomez')");
-        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
-                + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
-          
-        ServicesFacade sf = ServicesFacade.getInstance("");
-        semanaValido();
-     }
-     
-     */
-    /**
-     * --> verificar que el bloque  de la reserva no haya caducado(el bloque no haya vencido)
-     *
-     * @throws java.sql.SQLException
-     * @throws edu.eci.pdsw.services.ServiceFacadeException
-     * @throws edu.eci.pdsw.samples.persistence.PersistenceException
-     **/
-    /**
-    @Test
-    public void reservaBloqueValido()  throws SQLException, ServiceFacadeException, PersistenceException {
-        clearDB();
-        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-        Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,bloques)"
-                + "VALUES (10, NOW(), 2, 4, 'PDSW', 'Redes', 2096129,6)");
-        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
-                + "VALUES ('Redes', 20, 'Nicolas Gomez')");
-        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
-                + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
-        
-        Set<Asignatura> asig = new LinkedHashSet<>();
-        Set<Software> soft = new LinkedHashSet<>();
-                
-        Asignatura asign = new Asignatura("PDSW", "Proceso de Desarrollo de Software", 4);               
-        
-        asig.add(asign);
-        Profesor pr = new Profesor(Long.parseLong("2096129"), "Joseph Arboleda", "JNAD", "joseph.arboleda@mail.escuelaing.edu.co",Long.parseLong("3118331935"),Long.parseLong("1013658663"), asig);
-        Software sof = new Software("Blender", "6", "2.76", "https://www.blender.org/download/");
-        soft.add(sof);
-        Laboratorio lb = new Laboratorio("Redes", 20, "Nicolas Gomez", soft);
-        
-        Date fc = new Date(2015, 11, 05);
-        
-        Set<Integer> reservas = new HashSet(0);
-                
-        Reserva rv = new Reserva(10, fc, pr, lb, 1, 4, reservas, asign);
 
-        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-        
-        sf.insertReserva(rv);
-        
-        
-        Assert.assertTrue("Fallo la prueba la reserva no tiene un bloque valido", sf.reservabloquevalido(rv));
-
-        
-        
-        
-        
-    }
-    **/
->>>>>>> Actualizando pruebas(todas) antes de verificar pruebas
     /**
      * --> verificar que el horario  de la reserva este dentro del margen del horario institucional (7am-7pm)
      *
@@ -487,6 +416,7 @@ public class AppTest {
         }
            
      }
+     
     /**
      * --> Replicar la reserva varias semanas validando los 3 metodos para insertar (bloque valido,semana valida,reservabloque valido) 
      *
