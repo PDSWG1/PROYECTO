@@ -211,19 +211,20 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         ps.setDate(2, rv.getFecha());
         ps.setInt(3, rv.getSemana());
         ps.setInt(4, rv.getDia());
-        ps.setString(5, rv.getAsignatura().getNombre());
+        ps.setString(5, rv.getAsignatura().getId());
         ps.setString(6, rv.getLaboratorio().getNombreLab());
         ps.setLong(7, rv.getProfesor().getCodigo());
-        ps.executeQuery();
+        ps.execute();
         
         Iterator<Integer> i = rv.getBloques().iterator();
+        
         ps = con.prepareStatement("INSERT INTO BLOQUES (reservas_id, numero) "
                 + "VALUES (?, ?)");
         int key = rv.getId();
         while (i.hasNext()){
             ps.setInt(1, key);
             ps.setInt(2, i.next());
-            ps.executeQuery();
+            ps.execute();
         }
         
     }

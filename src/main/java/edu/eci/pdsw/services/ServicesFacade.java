@@ -46,7 +46,7 @@ public class ServicesFacade {
     }
     
     /**
-     *
+     * Traer los laboratorios de la semana de reserva
      * @param semana es el numero de la semana que se quiere consultar
      * @return
      * @throws ServiceFacadeException
@@ -54,6 +54,7 @@ public class ServicesFacade {
      * @throws SQLException
      */
     public Set<Reserva> reservaEsperadar(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
+        Set<Reserva> ans = null;
         if (semanaValida(semana)) {
             DaoFactory df = DaoFactory.getInstance(properties);
         
@@ -61,20 +62,17 @@ public class ServicesFacade {
        
             DaoLaboratorio dpro = df.getDaoLaboratorio();
         
-            Set<Reserva> ans = dpro.reservaEsperadar(semana);
+            ans = dpro.reservaEsperadar(semana);
         
             df.commitTransaction();
         
             df.endSession();
-            
-            return ans;
-        }else{
-            throw new ServiceFacadeException("Semana no valida");
         }
-        
+        return ans;
     }
+    
     /**
-     *
+     * Verificar si  los bloques son validos (r>0 && r<9)
      * @param rv todos los datos de la reserva a consultar
      * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los parametros institucionales
      * @throws ServiceFacadeException
@@ -97,8 +95,9 @@ public class ServicesFacade {
     }
 
     /**
+     * Envia el string hora del bloque dado 
      * @param bloque
-     * @return 
+     * @return bloque transformado en su string en horas
     **/
     public Set<String> transformadorBloque(int bloque){
         Set<String> bloques=new LinkedHashSet();
@@ -133,6 +132,13 @@ public class ServicesFacade {
         return bloques;
     }
     
+    /**
+     * consulta el laboratorio con el nombre que se envia como parametro
+     * @param nombre, id del laboratorio el cual se quiere consultar
+     * @return Laboratorio
+     * @throws PersistenceException
+     * @throws SQLException
+     */
     public Laboratorio infoLaboratorio(String nombre) throws PersistenceException, SQLException {
         DaoFactory df = DaoFactory.getInstance(properties);
 
@@ -148,6 +154,13 @@ public class ServicesFacade {
         return ans;
     }
 
+    /**
+     * Envia la reserva que se va a ingresar a la base de datos
+     * @param rv, Reserva que se va a ingresar a la base de datos
+     * @throws PersistenceException
+     * @throws SQLException
+     * @throws ServiceFacadeException
+     */
     public void insertReserva(Reserva rv) throws PersistenceException, SQLException, ServiceFacadeException {
         if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv) && semanaValida(rv.getSemana())){
             DaoFactory df = DaoFactory.getInstance(properties);
@@ -161,12 +174,17 @@ public class ServicesFacade {
             df.commitTransaction();
 
             df.endSession();
-        }else{
-            throw new ServiceFacadeException("No se pudo ingresar a la base de datos");
         }
         
     }
-
+    
+    /**
+     * verifica que no hayan bloques en otra semana que se crucen con los bloques de la reserva que se va a ingresar
+     * @param rv, Reserva
+     * @return boolean que dice si es posible o no hacer el ingreso
+     * @throws PersistenceException
+     * @throws SQLException
+     */
     private boolean reservaSemanaDiaValido(Reserva rv) throws PersistenceException, SQLException{
         boolean boo = true;
         DaoFactory df = DaoFactory.getInstance(properties);
@@ -194,23 +212,44 @@ public class ServicesFacade {
         
         return boo;
     }
-
+    
+    /**
+     * verifica que el numero de bloques sea valido (0 < siz && siz < 5)
+     * @param rv, Reserva
+     * @return boolean que dice si es posible o no hacer el ingreso
+     * @throws PersistenceException
+     * @throws SQLException
+     */
     private boolean reservaNumBloquesValido(Reserva rv) {
         int siz = rv.getBloques().size();
         return (0 < siz && siz < 5);
     }
     
+    /**
+     * verifica que la semana de la reserva sea valida  (0 < semana && semana < 17)
+     * @param rv, Reserva
+     * @return boolean que dice si es posible o no hacer el ingreso
+     * @throws PersistenceException
+     * @throws SQLException
+     */    
     private boolean semanaValida(int semana){
-        return 0 < semana && semana < 17;
+        return (0 < semana && semana < 17);
     }
 
+    
+    /**
+     * Insertar la reserva  y verificar si es posible replicarlar hasta finalizar las semanas
+     * @param rv todos los datos de la reserva a consultar
+     * @throws PersistenceException
+     * @throws SQLException
+     * @throws ServiceFacadeException
+     */
     public void insertReservaReplay(Reserva rv) throws PersistenceException, SQLException, ServiceFacadeException {
-        int semana=rv.getSemana();
         int semanaReplay=rv.getSemana();
         int idReplay=rv.getId();
-        boolean bol=true;
         
-        for(int i=semana;i<17 && bol;i++){
+        boolean bol=true;
+        for(int i=semanaReplay;i<17 && bol;i++){
             rv.setSemana(i);
             bol &= (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv));
         }
@@ -218,12 +257,10 @@ public class ServicesFacade {
         if (bol){
             for(int i=semanaReplay;i<17 ;i++){               
                 rv.setSemana(i);
-                rv.setId(idReplay);                    
+                rv.setId(idReplay); 
                 insertReserva(rv);
                 idReplay++;
             }    
-        }else{
-            throw new ServiceFacadeException("No se ingreso la reserva");
         }
     }
 }

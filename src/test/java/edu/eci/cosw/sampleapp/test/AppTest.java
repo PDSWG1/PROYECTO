@@ -34,19 +34,19 @@ public class AppTest {
 
     @After
     public void clearDB() throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-        Statement stmt = conn.createStatement();
-        stmt.execute("delete from ASIGNATURAS");
-        stmt.execute("delete from BLOQUES");
-        stmt.execute("delete from LABSOFT");
-        stmt.execute("delete from LABORATORIOS");
-        stmt.execute("delete from PROFESORES");
-        stmt.execute("delete from PROFESORESASIGNATURAS");
-        stmt.execute("delete from RESERVAS");
-        stmt.execute("delete from SOFTWARES");
-        stmt.execute("delete from SOLICITUDES");
-        conn.commit();
-        conn.close();
+        try (Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "")) {
+            Statement stmt = conn.createStatement();
+            stmt.execute("delete from ASIGNATURAS");
+            stmt.execute("delete from BLOQUES");
+            stmt.execute("delete from LABSOFT");
+            stmt.execute("delete from LABORATORIOS");
+            stmt.execute("delete from PROFESORES");
+            stmt.execute("delete from PROFESORESASIGNATURAS");
+            stmt.execute("delete from RESERVAS");
+            stmt.execute("delete from SOFTWARES");
+            stmt.execute("delete from SOLICITUDES");
+            conn.commit();
+        }
     }
 
     //funcion de conversion rapida
@@ -316,22 +316,29 @@ public class AppTest {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,bloques)"
-                + "VALUES (9, NOW(), 2, 4, 'PDSW', 'Redes', 2096129,0)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (9, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
+        
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Redes', 20, 'Nicolas Gomez')");
+        
         stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
                 + "VALUES (2096129, 'Joseph Arboleda', 'JNAD', 'joseph.arboleda@mail.escuelaing.edu.co', 3118331935, 1013658663)");
         
         Set<Asignatura> asig = new LinkedHashSet<>();
+        
         Set<Software> soft = new LinkedHashSet<>();
                 
         Asignatura asign = new Asignatura("PDSW", "Proceso de Desarrollo de Software", 4);               
         
         asig.add(asign);
+        
         Profesor pr = new Profesor(Long.parseLong("2096129"), "Joseph Arboleda", "JNAD", "joseph.arboleda@mail.escuelaing.edu.co",Long.parseLong("3118331935"),Long.parseLong("1013658663"), asig);
+        
         Software sof = new Software("Blender", "6", "2.76", "https://www.blender.org/download/");
+        
         soft.add(sof);
+        
         Laboratorio lb = new Laboratorio("Redes", 20, "Nicolas Gomez", soft);
         
         Date fc = new Date(2015, 11, 05);
@@ -343,8 +350,10 @@ public class AppTest {
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         
         sf.insertReserva(rv);
+        
         Set<Reserva> ans=sf.reservaEsperadar(1);
         boolean bol=true;
+        
         for(Reserva r:ans) {
             if (r.getId()==rv.getId()){
                 bol =false;
@@ -355,7 +364,7 @@ public class AppTest {
     }
    
     /**
-     * --> Replicar la reserva varias semanas validando los 3 metodos para insertar (bloque valido,semana valida,reservabloque valido) 
+     * --> Replicar la reserva varias semanas validando  que falle al menos uno de los 3 metodos para insertar (bloque valido,semana valida,reservabloque valido) 
      *
      * @throws java.sql.SQLException
      * @throws edu.eci.pdsw.services.ServiceFacadeException
@@ -367,20 +376,24 @@ public class AppTest {
         
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,bloques)"
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
                 + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de software', 2096139)");
+        
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Ingenieria de software', 20, 'Nicolas Gomez')");
+        
         stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
                 + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
+        
         stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
                 + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
-        stmt.execute("INSERT INTO PROFESORESASIGNATURAS (profesores_codigo, asignaturas_mnemonico) "
-                + "VALUES (2096139, 'PIMO')");
+        
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (20, 2)");
+        
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (20, 3)");
+        
         
         Set<Asignatura> asis = new LinkedHashSet<>();
         
@@ -404,12 +417,12 @@ public class AppTest {
         reservas.add(1);
         reservas.add(2);
 
-        
-        Reserva rv = new Reserva(21, fc, pr, lb, 1, 3, reservas, asi);
+        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-        
+
         sf.insertReservaReplay(rv);
+        
         Set<Reserva> ans =sf.reservaEsperadar(2);
         for (Reserva r :ans){
             Assert.assertTrue("No se pudo replicar la reserva",r.getId()==20);
@@ -450,12 +463,12 @@ public class AppTest {
         reservas.add(1);
         reservas.add(2);
 
-        
         Reserva rv = new Reserva(21, fc, pr, lb, 1, 3, reservas, asi);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         
         sf.insertReservaReplay(rv);
+        
         for (int i=rv.getSemana(), j=21;i<17;i++){
             Set<Reserva> ans =sf.reservaEsperadar(i);
             for (Reserva r :ans){
@@ -465,5 +478,6 @@ public class AppTest {
         }
         
      }
+
 } 
 
