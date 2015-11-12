@@ -13,6 +13,7 @@ import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -262,5 +263,59 @@ public class ServicesFacade {
                 idReplay++;
             }    
         }
+    }
+    
+    /**
+     *
+     * @param semana
+     * @return 
+     * @throws ServiceFacadeException
+     * @throws PersistenceException
+     * @throws SQLException
+     */
+    public String[][][] mostrarInformacionTabla(int semana) throws ServiceFacadeException, PersistenceException, SQLException{
+        String[][][] matriz = new String[6][8][6];
+        Set<Reserva> ans = reservaEsperadar(semana);
+        for (Reserva r :ans){
+            int lb = numLaboratorio(r.getLaboratorio().getNombreLab());
+            int dia = r.getDia()-1;
+            for (int i : r.getBloques()){
+                matriz[dia][i-1][lb] = (r.getAsignatura()+" "+r.getProfesor().getCodigoNombre());
+            }
+        }
+        
+        for (String[][] r:matriz){
+            for(String[] a: r){
+                System.out.println(Arrays.toString(a));
+            }
+        }
+        return matriz;
+    }
+    
+    private int numLaboratorio(String laboratorio){
+        int ans = 0;
+        switch (laboratorio){
+            case "B0":
+                ans = 0;
+                break;  
+            case "Ingenieria de Software":
+                ans = 1;
+                break;  
+            case "Multimedia y Moviles":
+                ans = 2;
+                break;  
+            case "Plataformas Computacionales":
+                ans = 3;
+                break;  
+            case "Redes de Computadores":
+                ans = 4;
+                break;  
+            case "Aula Inteligente":
+                ans = 5;
+                break;  
+            default:
+                break;    
+        }
+        return ans;
     }
 }

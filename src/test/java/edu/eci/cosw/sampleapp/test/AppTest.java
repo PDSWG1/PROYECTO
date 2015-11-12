@@ -369,9 +369,9 @@ public class AppTest {
      * @throws java.sql.SQLException
      * @throws edu.eci.pdsw.services.ServiceFacadeException
      * @throws edu.eci.pdsw.samples.persistence.PersistenceException
-     **/
-     @Test
-     public void repiclarReservaNoValido()  throws SQLException, ServiceFacadeException, PersistenceException {
+    **/
+    @Test
+    public void repiclarReservaNoValido()  throws SQLException, ServiceFacadeException, PersistenceException {
         clearDB();
         
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
@@ -428,7 +428,7 @@ public class AppTest {
             Assert.assertTrue("No se pudo replicar la reserva",r.getId()==20);
         }
            
-     }
+    }
      
     /**
      * --> Replicar la reserva varias semanas validando los 3 metodos para insertar (bloque valido,semana valida,reservabloque valido) 
@@ -436,9 +436,9 @@ public class AppTest {
      * @throws java.sql.SQLException
      * @throws edu.eci.pdsw.services.ServiceFacadeException
      * @throws edu.eci.pdsw.samples.persistence.PersistenceException
-     **/
-     @Test
-     public void repiclarReservaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
+    **/
+    @Test
+    public void repiclarReservaValido()  throws SQLException, ServiceFacadeException, PersistenceException {
         clearDB();
         
         Set<Asignatura> asis = new LinkedHashSet<>();
@@ -477,7 +477,7 @@ public class AppTest {
             
         }
         
-     }
+    }
 
 } 
 
