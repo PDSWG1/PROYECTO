@@ -58,4 +58,11 @@ public class Laboratorio {
         this.labsoftware = labsoftware;
     }
     
+    public String getSotfware(){
+        StringBuilder ans = new StringBuilder();
+        for (Software sos: labsoftware){
+            ans.append(sos.getNombre()).append("\n");
+        }
+        return ans.toString();
+    }
 }

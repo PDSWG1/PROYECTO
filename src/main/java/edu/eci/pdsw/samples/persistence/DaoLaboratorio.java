@@ -5,7 +5,6 @@
  */
 package edu.eci.pdsw.samples.persistence;
 
-import java.sql.SQLException;
 import java.util.Set;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Reserva;
@@ -16,12 +15,13 @@ import edu.eci.pdsw.entities.Reserva;
  */
 public interface DaoLaboratorio {
     
-    public Set<Reserva> reservaEsperadar(int semana) throws SQLException, PersistenceException;
+    public Set<Reserva> reservaEsperadar(int semana) throws PersistenceException;
     
-    public Laboratorio getLaboratorio(String nombre) throws SQLException;
+    public Laboratorio getLaboratorio(String nombre) throws PersistenceException;
 
-    public void insertReserva(Reserva rv) throws SQLException;
+    public void insertReserva(Reserva rv) throws PersistenceException;
 
-    public Set<Reserva> reservaLabSemanDia(String laboratorio, int semana, int dia) throws SQLException;
-    
+    public Set<Reserva> reservaLabSemanDia(String laboratorio, int semana, int dia) throws PersistenceException;
+
+    public Set<Laboratorio> getAlllabs()  throws PersistenceException;
 }

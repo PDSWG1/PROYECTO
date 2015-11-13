@@ -14,41 +14,53 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     <h:body>
-        <div>Prueba</div>
-        <p:layout style="min-width:400px;min-height:200px;">
-            
-            <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200">
-                West
-            </p:layoutUnit>
+        <h:form id="reserva">
+            <div>Prueba</div>
+            <p:layout style="min-width:400px;min-height:200px;">
 
-            <p:layoutUnit position="center">
-                Center
-            </p:layoutUnit>
-                
-              <!--Formato de muestra de reservas -->
-            <p:layoutUnit position="center">
-                <p:dataTable id="horarios" var="hor" value="#{beanPruebas.laboratorios}">
-                    <f:facet name="Horarios disponibles en la fecha consultada">
-                        Horarios disponibles en la fecha consultada
-                    </f:facet>
-                    <p:column headerText="Id">
-                        <h:outputText value="#{hor.nombreLab}" />
-                    </p:column>
+                <p:layoutUnit position="west" resizable="true" size="100" minSize="40" maxSize="200">
+                    West
+                </p:layoutUnit>
 
-                    <p:column headerText="Year">
-                        <h:outputText value="#{hor.encargado}" />
-                    </p:column>
+                <p:layoutUnit position="center">
+                    Center
+                </p:layoutUnit>
 
-                    <p:column headerText="Brand">
-                        <p:dataTable
-                            value="#{beanPruebas.laboratorios}"
-                            var="f">
-                            <p:column>#{f.nombreLab}</p:column>
-                        </p:dataTable>
-                    </p:column>
-                </p:dataTable>
-            </p:layoutUnit>
-            -->
-        </p:layout>
+                  <!--Formato de muestra de reservas -->
+                <p:layoutUnit position="center">
+                    <p:ring id="basic" value="#{beanReserva.laboratorios}" var="lab">
+                            <p:outputPanel style="text-align: center;" layout="block">
+                             #{lab.nombreLab}
+                            <br />
+                            <p:commandButton update=":reserva:infoLabs" icon="ui-icon-search" title="View" oncomplete="PF('LabsInfo').show();">
+                                <f:setPropertyActionListener value="#{lab}" target="#{beanReserva.laboratorio}" />
+                            </p:commandButton>
+                            </p:outputPanel>
+                        </p:ring>
+                </p:layoutUnit>
+                -->
+            </p:layout>
+            <p:dialog header="Informacion de Laboratorio Elegido" widgetVar="LabsInfo" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "500">
+                        <p:outputPanel id="infoLabs" style="text-align:center;" layout="block">
+                            <p:panelGrid  columns="2" rendered="#{not empty beanReserva.laboratorio}" columnClasses="label,value">
+                                <f:facet name="header">
+                                    <p:graphicImage library="images" name="Laboratorio de Software-big.jpg" width="350" height="250"/> 
+                                </f:facet>
+
+                                <h:outputText value="Nombre de Laboratorio:" />
+                                <h:outputText value="#{beanReserva.laboratorio.nombreLab}" />
+
+                                <h:outputText value="Número de computadores" />
+                                <h:outputText value="#{beanReserva.laboratorio.numerocomputadores}" />
+
+                                <h:outputText value="Encargado de la sala:" />
+                                <h:outputText value="#{beanReserva.laboratorio.encargado}" />
+
+                                <h:outputText value="Programas en la sala: " />
+                                <h:outputText value="#{beanReserva.laboratorio.sotfware}" />
+                            </p:panelGrid>
+                        </p:outputPanel>
+            </p:dialog> 
+        </h:form>
     </h:body>
 </html>

@@ -13,7 +13,7 @@ package edu.eci.pdsw.entities;
  */
 public class Software {
     
-     private String nombre;
+    private String nombre;
     private String licencia;
     private String version;
     private String urlDown;
@@ -57,10 +57,5 @@ public class Software {
     public void setUrlDown(String urlDown) {
         this.urlDown = urlDown;
     }
-    
-    
-    
-    
-    
     
 }
