@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -478,6 +480,66 @@ public class AppTest {
         }
         
     }
+    
+    @Test
+    public void mostrarMatriz() throws SQLException, PersistenceException {
+        clearDB();
 
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de Software', 2096139)");
+
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Ingenieria de Software', 20, 'Nicolas Gomez')");
+
+        stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
+                + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
+
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (20, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (20, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (21, NOW(), 2, 4, 'PIMO', 'Plataformas Computacionales', 2096139)");
+
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Plataformas Computacionales', 20, 'Nicolas Gomez')");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (21, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (21, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
+                + "VALUES (22, NOW(), 2, 4, 'PIMO', 'Multimedia y Moviles', 2096139)");
+
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Multimedia y Moviles', 20, 'Nicolas Gomez')");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (22, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (22, 3)");
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+
+        ArrayList<ArrayList<ArrayList<String>>> ans = sf.mostrarInformacionTabla(2);
+ 
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(1).equals("PIMO CARO"));
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(2).equals("PIMO CARO"));
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(3).equals("PIMO CARO"));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(1).equals("PIMO CARO"));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).equals("PIMO CARO"));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).equals("PIMO CARO")); 
+        
+    }
 } 
 

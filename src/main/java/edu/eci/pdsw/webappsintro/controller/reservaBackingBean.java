@@ -8,9 +8,8 @@ package edu.eci.pdsw.webappsintro.controller;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServicesFacade;
+import java.util.ArrayList;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -21,20 +20,35 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanReserva")
 @SessionScoped
 public class reservaBackingBean {
-    private int semana = 0;
+    private int semana = 1;
     private Set<Laboratorio> laboratorios;
     private Laboratorio laboratorio;
+    private ArrayList<ArrayList<ArrayList<String>>> horario;
+
+    public ArrayList<ArrayList<ArrayList<String>>> getHorario() throws PersistenceException {
+        return ServicesFacade.getInstance("applicationconfig.properties").mostrarInformacionTabla(semana);
+    }
+
+    public void setHorario(ArrayList<ArrayList<ArrayList<String>>> horario) {
+        this.horario = horario;
+    }
 
     public Laboratorio getLaboratorio() {
         return laboratorio;
     }
 
+    public int getSemana() {
+        return this.semana;
+    }
+        
     public void setSemana(int semana) {
         this.semana = semana;
+        System.out.println(semana);
     }
 
     public void setLaboratorio(Laboratorio laboratorio) {
         this.laboratorio = laboratorio;
+        System.out.println(laboratorio.getNombreLab());
     }
     
     public Set<Laboratorio> getLaboratorios() throws PersistenceException {

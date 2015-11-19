@@ -13,9 +13,10 @@ import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -98,8 +99,8 @@ public class ServicesFacade {
      * @param bloque
      * @return bloque transformado en su string en horas
     **/
-    public Set<String> transformadorBloque(int bloque){
-        Set<String> bloques=new LinkedHashSet();
+    public ArrayList<String> transformadorBloque(int bloque){
+        ArrayList<String> bloques=new ArrayList<>();
         switch (bloque) {
             case 1:
                 bloques.add("7:00am-8:30am");
@@ -254,29 +255,73 @@ public class ServicesFacade {
         }
     }
     
+    private ArrayList<String> AString(String s){
+        ArrayList<String> a = new ArrayList<>();
+        a.add(s);
+        return a;
+    }
     /**
      *
      * @param semana
      * @return 
      * @throws PersistenceException
      */
-    public String[][][] mostrarInformacionTabla(int semana) throws PersistenceException{
-        String[][][] matriz = new String[6][8][6];
+    public ArrayList<ArrayList<ArrayList<String>>> mostrarInformacionTabla(int semana) throws PersistenceException{
+        String[][] matriz = new String[48][6];
+        for(String[] s: matriz){
+            Arrays.fill(s, "Disponible");
+        }
         Set<Reserva> ans = reservaEsperadar(semana);
         for (Reserva r :ans){
             int lb = numLaboratorio(r.getLaboratorio().getNombreLab());
             int dia = r.getDia()-1;
             for (int i : r.getBloques()){
-                matriz[dia][i-1][lb] = (r.getAsignatura()+" "+r.getProfesor().getCodigoNombre());
+                matriz[lb+((i-1)*6)][dia] = (r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre());
             }
         }
-        
-        for (String[][] r:matriz){
-            for(String[] a: r){
-                System.out.println(Arrays.toString(a));
+        ArrayList<ArrayList<ArrayList<String>>> a = new ArrayList<>();
+        ArrayList<ArrayList<String>> days;
+        ArrayList<String> labs;
+        for (int k = 0; k < 8; k++){
+            days = new ArrayList<>();
+            days.add(transformadorBloque(k+1));
+            for(int i = 0; i < 7; i++){
+                labs = new ArrayList<>();
+                if(i==0){
+                    labs.add("BO");
+                    labs.add("Ingenieria de Software");
+                    labs.add("Multimedia y Moviles");
+                    labs.add("Plataformas Computacionales");
+                    labs.add("Redes de Computadores");
+                    labs.add("Aula Inteligente");
+                    days.add(labs);
+                }else{
+                    for (int j = 0; j < 6; j++){
+                        labs.add(matriz[(k*6)+j][i-1]);
+                    }
+                days.add(labs);
+                }
             }
+            a.add(days);
         }
-        return matriz;
+        /**
+        for (int k = 0; k < 8; k++){
+            for(int i = 0; i < 6; i++){
+                for (int j = 0; j < a.get(k).get(i).size(); j++){
+                    if(a.get(k).get(i).get(j)!= null){System.out.print(k+"  "+i+"  "+j);}
+                    System.out.print(a.get(k).get(i).get(j)+" ");
+                }
+                System.out.println("");        
+            }
+            System.out.println("");
+        }
+
+        ArrayList<String> listHorario = new ArrayList<>();
+        for (int i = 0; i < 48; i++){
+            listHorario.add(matriz[i][n]);
+        }
+        *         * **/
+        return a;
     }
     
     private int numLaboratorio(String laboratorio){
@@ -285,7 +330,7 @@ public class ServicesFacade {
             case "B0":
                 ans = 0;
                 break;  
-            case "Laboratorio de Software":
+            case "Ingenieria de Software":
                 ans = 1;
                 break;  
             case "Multimedia y Moviles":
@@ -297,7 +342,7 @@ public class ServicesFacade {
             case "Redes de Computadores":
                 ans = 4;
                 break;  
-            case "Sala Inteligente":
+            case "Aula Inteligente":
                 ans = 5;
                 break;  
             default:
