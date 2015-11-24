@@ -99,7 +99,7 @@ public class ServicesFacade {
      * @param bloque
      * @return bloque transformado en su string en horas
     **/
-    public ArrayList<String> transformadorBloque(int bloque){
+    public static ArrayList<String> transformadorBloque(int bloque){
         ArrayList<String> bloques=new ArrayList<>();
         switch (bloque) {
             case 1:
@@ -260,6 +260,25 @@ public class ServicesFacade {
         a.add(s);
         return a;
     }
+    
+    private static final String[][] matrizLLena = new String[48][6];
+    private int lb, dia;
+    private ArrayList<ArrayList<ArrayList<String>>> a;
+    private ArrayList<ArrayList<String>> days;
+    private ArrayList<String> labs;
+    private static final ArrayList<String> bloques = new ArrayList<>();
+    static{
+        for(String[] s: matrizLLena){
+            Arrays.fill(s, "Disponible");
+        }
+        for (int i = 1; i < 9; i++){
+            bloques.add(transformadorBloque(i).get(0));
+        }
+    }
+    
+    public ArrayList<String> getBloques(){
+        return bloques;
+    }
     /**
      *
      * @param semana
@@ -267,21 +286,16 @@ public class ServicesFacade {
      * @throws PersistenceException
      */
     public ArrayList<ArrayList<ArrayList<String>>> mostrarInformacionTabla(int semana) throws PersistenceException{
-        String[][] matriz = new String[48][6];
-        for(String[] s: matriz){
-            Arrays.fill(s, "Disponible");
-        }
+        String[][] matriz = matrizLLena;
         Set<Reserva> ans = reservaEsperadar(semana);
         for (Reserva r :ans){
-            int lb = numLaboratorio(r.getLaboratorio().getNombreLab());
-            int dia = r.getDia()-1;
+            lb = numLaboratorio(r.getLaboratorio().getNombreLab());
+            dia = r.getDia()-1;
             for (int i : r.getBloques()){
                 matriz[lb+((i-1)*6)][dia] = (r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre());
             }
         }
-        ArrayList<ArrayList<ArrayList<String>>> a = new ArrayList<>();
-        ArrayList<ArrayList<String>> days;
-        ArrayList<String> labs;
+        a = new ArrayList<>();
         for (int k = 0; k < 8; k++){
             days = new ArrayList<>();
             days.add(transformadorBloque(k+1));
@@ -304,7 +318,6 @@ public class ServicesFacade {
             }
             a.add(days);
         }
-        /**
         for (int k = 0; k < 8; k++){
             for(int i = 0; i < 6; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
@@ -314,13 +327,7 @@ public class ServicesFacade {
                 System.out.println("");        
             }
             System.out.println("");
-        }
-
-        ArrayList<String> listHorario = new ArrayList<>();
-        for (int i = 0; i < 48; i++){
-            listHorario.add(matriz[i][n]);
-        }
-        *         * **/
+        }        
         return a;
     }
     
@@ -367,4 +374,5 @@ public class ServicesFacade {
         
         return ans;
     }
+    
 }
