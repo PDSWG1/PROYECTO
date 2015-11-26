@@ -92,6 +92,7 @@ public class reservaBackingBean {
     }
     
     public void makeReserva() throws PersistenceException{
+        //Prueba de que inserta en la base de datos
         Set<Integer> transformadorBloqueInteger = ServicesFacade.transformadorBloqueInteger(selectedBloques);
         java.util.Date now = new java.util.Date();
         Date fecha = new Date(now.getYear(), now.getMonth(), now.getDay());

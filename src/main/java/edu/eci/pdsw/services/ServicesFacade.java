@@ -361,7 +361,8 @@ public class ServicesFacade {
                 }
             }
             a.add(days);
-        }
+        } 
+        /**
         for (int k = 0; k < 8; k++){
             for(int i = 0; i < 6; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
@@ -371,7 +372,7 @@ public class ServicesFacade {
                 System.out.println("");        
             }
             System.out.println("");
-        }        
+        }  **/      
         return a;
     }
     
@@ -422,13 +423,12 @@ public class ServicesFacade {
     public Profesor getProfesor(int n) throws PersistenceException{
         Profesor ans = null;
         try{
-            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
             DaoFactory df = DaoFactory.getInstance(properties);
-Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
             df.beginSession();
 
             DaoProfesor dpro = df.getDaoProfesor();
-Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "2");
             ans = dpro.getProfesor(n);
 
             df.commitTransaction();
