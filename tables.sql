@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `RESERVAS`(
 	`asignatura` VARCHAR(5) NOT NULL,
 	`laboratorio_nombre` VARCHAR(200)  NOT NULL,
 	`profesores_codigo` BIGINT NOT NULL,
+	`numcomputadores` INT NOT NULL,
 	PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

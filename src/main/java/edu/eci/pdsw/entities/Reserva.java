@@ -21,8 +21,11 @@ public class Reserva {
     private Laboratorio laboratorio;
     private int semana;
     private int dia;
+    private int numcomputadores;
+
     
-    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana, int dia, Set<Integer> bloques, Asignatura asignatura) {
+    
+    public Reserva(int id, Date fecha, Profesor profesor, Laboratorio laboratorio, int semana, int dia, Set<Integer> bloques, Asignatura asignatura,int numcomputadores) {
         this.id=id;
         this.fecha=fecha;
         this.profesor=profesor;
@@ -31,6 +34,7 @@ public class Reserva {
         this.dia=dia;
         this.bloques=bloques;
         this.asignatura=asignatura;
+        this.numcomputadores=numcomputadores;
 }
 
     public int getSemana() {
@@ -96,6 +100,17 @@ public class Reserva {
 
     public void setDia(int dia) {
         this.dia = dia;
+    }
+    public int getNumcomputadores() {
+        return numcomputadores;
+    }
+
+    public void setNumcomputadores(int numcomputadores) {
+        this.numcomputadores = numcomputadores;
+    }
+
+    public int getint(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

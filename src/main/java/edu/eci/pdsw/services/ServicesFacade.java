@@ -159,6 +159,8 @@ public class ServicesFacade {
      * @throws PersistenceException
      */
     public void insertReserva(Reserva rv) throws PersistenceException {
+        System.out.println("entre a reserva ");
+        System.out.println(reservaSemanaDiaValido(rv));
         if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv) && semanaValida(rv.getSemana())){
             DaoFactory df = DaoFactory.getInstance(properties);
 

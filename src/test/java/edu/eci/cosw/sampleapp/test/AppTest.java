@@ -14,7 +14,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -77,8 +76,8 @@ public class AppTest {
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
         
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724,3)");
         
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 1)");
@@ -204,8 +203,8 @@ public class AppTest {
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
         
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores )"
+                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724,2)");
         
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 1)");
@@ -233,12 +232,12 @@ public class AppTest {
         Laboratorio lb = new Laboratorio("Plataformas", 30, "Nicolas Gomez", soft);
         
         Date fc = new Date(2015, 11, 05);
-        
+        int numcomputadores=1;
         Set<Integer> reservas = new LinkedHashSet();
         reservas.add(4);
         reservas.add(5);
         
-        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas, asi);
+        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas, asi, numcomputadores);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         
@@ -294,13 +293,14 @@ public class AppTest {
         reservas.add(3);
         reservas.add(4);
         reservas.add(5);
+        int numcomputadores=1;
+        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas, asi,numcomputadores);
         
-        Reserva rv = new Reserva(2, fc, pr, lb, 1, 3, reservas, asi);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-        
+        System.out.println("entrando a reserva");
         sf.insertReserva(rv);
-        
+        System.out.println("saliendo de reservas");
         Set<Reserva> ans = sf.reservaEsperadar(1);
         
         Assert.assertTrue("Fallo la prueba si ingreso la reserva", ans.isEmpty());
@@ -318,8 +318,8 @@ public class AppTest {
         clearDB();
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (9, NOW(), 2, 4, 'PDSW', 'Redes', 2096129)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (9, NOW(), 2, 4, 'PDSW', 'Redes', 2096129,1)");
         
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Redes', 20, 'Nicolas Gomez')");
@@ -346,8 +346,8 @@ public class AppTest {
         Date fc = new Date(2015, 11, 05);
         
         Set<Integer> reservas = new HashSet(0);
-                
-        Reserva rv = new Reserva(10, fc, pr, lb, 1, 4, reservas, asign);
+        int numcomputadores=1;                
+        Reserva rv = new Reserva(10, fc, pr, lb, 1, 4, reservas, asign,numcomputadores);
 
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         
@@ -378,8 +378,8 @@ public class AppTest {
         
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de software', 2096139)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de software', 2096139,1)");
         
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Ingenieria de software', 20, 'Nicolas Gomez')");
@@ -418,8 +418,8 @@ public class AppTest {
         Set<Integer> reservas = new LinkedHashSet();
         reservas.add(1);
         reservas.add(2);
-
-        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi);
+        int numcomputadores=1;
+        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi,numcomputadores);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
 
@@ -464,8 +464,8 @@ public class AppTest {
         Set<Integer> reservas = new LinkedHashSet();
         reservas.add(1);
         reservas.add(2);
-
-        Reserva rv = new Reserva(21, fc, pr, lb, 1, 3, reservas, asi);
+        int numcomputadores=1;
+        Reserva rv = new Reserva(21, fc, pr, lb, 1, 3, reservas, asi,numcomputadores);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
         
@@ -487,8 +487,8 @@ public class AppTest {
 
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de Software', 2096139)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de Software', 2096139,1)");
 
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Ingenieria de Software', 20, 'Nicolas Gomez')");
@@ -505,8 +505,8 @@ public class AppTest {
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (20, 3)");
 
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (21, NOW(), 2, 4, 'PIMO', 'Plataformas Computacionales', 2096139)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadoresy<affg)"
+                + "VALUES (21, NOW(), 2, 4, 'PIMO', 'Plataformas Computacionales', 2096139,1)");
 
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas Computacionales', 20, 'Nicolas Gomez')");
@@ -517,8 +517,8 @@ public class AppTest {
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (21, 3)");
 
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo)"
-                + "VALUES (22, NOW(), 2, 4, 'PIMO', 'Multimedia y Moviles', 2096139)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (22, NOW(), 2, 4, 'PIMO', 'Multimedia y Moviles', 2096139,1)");
 
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Multimedia y Moviles', 20, 'Nicolas Gomez')");
@@ -539,6 +539,59 @@ public class AppTest {
         Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(1).equals("PIMO CARO"));
         Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).equals("PIMO CARO"));
         Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).equals("PIMO CARO")); 
+        
+    }
+    /**
+     * --> Reserva de laboratorios con equipos disponibles
+     *
+     * @throws java.sql.SQLException
+     * @throws edu.eci.pdsw.services.ServiceFacadeException
+     * @throws edu.eci.pdsw.samples.persistence.PersistenceException
+    **/
+    @Test
+    public void reservaLabDisponible() throws SQLException, PersistenceException{
+        clearDB();
+        Set<Asignatura> asis = new LinkedHashSet<>();
+        int numcomputadores=10;
+        Set<Software> soft = new LinkedHashSet<>();
+
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Ingenieria de Software', 20, 'Maria Blanco')");
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Redes', 10, 'Nicolas Gomez')");
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('sala computacional', 5, 'Hugo Sanchez')");
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('B0', 30, 'Aurora Elvira')");
+        
+        
+                
+        Asignatura asi = new Asignatura("PIMO", "Programacion imperativa modular", 4);               
+        
+        asis.add(asi);
+              
+        Profesor pr = new Profesor(Long.parseLong("2096139"), "Camilo Rocha", "CARO", "camilo.rocha@escuelaing.edu.co",Long.parseLong("3134723033"),Long.parseLong("1013628836"), asis);
+        
+        Software sof = new Software("Python", "8", "3.5.0", "https://www.python.org/downloads/");
+        
+        soft.add(sof);
+        
+        Laboratorio lb = new Laboratorio("Ingenieria de software", 24, "Nicolas Gomez", soft);
+        
+        Date fc = new Date(2015, 11, 05);
+        
+        Set<Integer> reservas = new LinkedHashSet();
+        reservas.add(1);
+        
+
+
+        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi,numcomputadores);
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+
+        sf.insertReservaReplay(rv);
         
     }
 } 
