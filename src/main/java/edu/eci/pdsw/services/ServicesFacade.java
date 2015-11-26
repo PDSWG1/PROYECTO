@@ -6,19 +6,23 @@
 package edu.eci.pdsw.services;
 
 import edu.eci.pdsw.entities.Laboratorio;
+import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
 import edu.eci.pdsw.samples.persistence.DaoFactory;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
+import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -99,7 +103,7 @@ public class ServicesFacade {
      * @param bloque
      * @return bloque transformado en su string en horas
     **/
-    public static ArrayList<String> transformadorBloque(int bloque){
+    public static ArrayList<String> transformadorBloqueString(int bloque){
         ArrayList<String> bloques=new ArrayList<>();
         switch (bloque) {
             case 1:
@@ -130,6 +134,46 @@ public class ServicesFacade {
                 break;
         }
         return bloques;
+    }
+    
+        /**
+     * Envia el string hora del bloque dado 
+     * @param bloque
+     * @return bloque transformado en su string en horas
+    **/
+    public static Set<Integer> transformadorBloqueInteger(Set<String> bloque){
+        Set<Integer> bloquesSelected=new HashSet<>();
+        for (String s: bloque){
+            switch (s) {
+                case "7:00am-8:30am":
+                    bloquesSelected.add(1);
+                    break;
+                case "8:30am-10:00am":
+                    bloquesSelected.add(2);
+                    break;
+                case "10:00am-11:30pm":
+                    bloquesSelected.add(3);
+                    break;
+                case "11:30pm-1:00pm":
+                    bloquesSelected.add(4);
+                    break;
+                case "1:00pm-2:30pm":
+                    bloquesSelected.add(5);
+                    break;
+                case "2:30pm-4:00pm":
+                    bloquesSelected.add(6);
+                    break;
+                case "4:00pm-5:30pm":
+                    bloquesSelected.add(7);
+                    break;
+                case "5:30pm-7:00pm":   
+                    bloquesSelected.add(8);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return bloquesSelected;
     }
     
     /**
@@ -274,7 +318,7 @@ public class ServicesFacade {
             Arrays.fill(s, "Disponible");
         }
         for (int i = 1; i < 9; i++){
-            bloques.add(transformadorBloque(i).get(0));
+            bloques.add(transformadorBloqueString(i).get(0));
         }
     }
     
@@ -300,7 +344,7 @@ public class ServicesFacade {
         a = new ArrayList<>();
         for (int k = 0; k < 8; k++){
             days = new ArrayList<>();
-            days.add(transformadorBloque(k+1));
+            days.add(transformadorBloqueString(k+1));
             for(int i = 0; i < 7; i++){
                 labs = new ArrayList<>();
                 if(i==0){
@@ -319,7 +363,8 @@ public class ServicesFacade {
                 }
             }
             a.add(days);
-        }
+        } 
+        /**
         for (int k = 0; k < 8; k++){
             for(int i = 0; i < 6; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
@@ -329,7 +374,7 @@ public class ServicesFacade {
                 System.out.println("");        
             }
             System.out.println("");
-        }        
+        }  **/      
         return a;
     }
     
@@ -374,6 +419,26 @@ public class ServicesFacade {
 
         df.endSession();
         
+        return ans;
+    }
+    
+    public Profesor getProfesor(int n) throws PersistenceException{
+        Profesor ans = null;
+        try{
+            DaoFactory df = DaoFactory.getInstance(properties);
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
+            df.beginSession();
+
+            DaoProfesor dpro = df.getDaoProfesor();
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "2");
+            ans = dpro.getProfesor(n);
+
+            df.commitTransaction();
+
+            df.endSession();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return ans;
     }
     
