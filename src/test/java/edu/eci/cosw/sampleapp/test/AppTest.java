@@ -507,7 +507,7 @@ public class AppTest {
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (20, 3)");
 
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadoresy<affg)"
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
                 + "VALUES (21, NOW(), 2, 4, 'PIMO', 'Plataformas Computacionales', 2096139,1)");
 
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
