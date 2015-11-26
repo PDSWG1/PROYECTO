@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -540,6 +542,35 @@ public class AppTest {
         Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).equals("PIMO CARO"));
         Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).equals("PIMO CARO")); 
         
+    }
+    
+    @Test
+    public void informacionProfesor(){
+        try{
+            clearDB();
+            Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+            Statement stmt = conn.createStatement();
+
+            stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                    + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
+            
+            ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+            
+            Profesor pr = sf.getProfesor(2096139);
+            
+            Assert.assertTrue("No coinciden los datos",pr.getCodigo() == 2096139);
+            Assert.assertTrue("No coinciden los datos",pr.getNombre().equals("Camilo Rocha"));
+            Assert.assertTrue("No coinciden los datos",pr.getCodigoNombre().equals("CARO"));
+            Assert.assertTrue("No coinciden los datos",pr.getEmail().equals("camilo.rocha@escuelaing.edu.co"));
+            Assert.assertTrue("No coinciden los datos",pr.getTelefono() == Long.parseLong("3134723033"));
+            Assert.assertTrue("No coinciden los datos",pr.getCedula() == Long.parseLong("1013628836")); 
+            
+        } catch (PersistenceException ex) {
+            Logger.getLogger(AppTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AppTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 } 
 
