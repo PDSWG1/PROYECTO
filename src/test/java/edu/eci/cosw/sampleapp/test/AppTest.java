@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.ArrayList;                   
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -548,18 +548,24 @@ public class AppTest {
      * --> Reserva de laboratorios con equipos disponibles
      *
      * @throws java.sql.SQLException
-     * @throws edu.eci.pdsw.services.ServiceFacadeException
      * @throws edu.eci.pdsw.samples.persistence.PersistenceException
     **/
     @Test
     public void reservaLabDisponible() throws SQLException, PersistenceException{
         clearDB();
         Set<Asignatura> asis = new LinkedHashSet<>();
-        int numcomputadores=10;
+        int numcomputadores=70;
+        boolean compu;
         Set<Software> soft = new LinkedHashSet<>();
 
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
+        
+        
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
+        stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
+                + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Ingenieria de Software', 20, 'Maria Blanco')");
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
@@ -568,6 +574,13 @@ public class AppTest {
                 + "VALUES ('sala computacional', 5, 'Hugo Sanchez')");
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('B0', 30, 'Aurora Elvira')");
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
+                + "VALUES (20, 1)");
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Ingenieria de Software', 'Python')");
+        
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
+                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de Software', 2096139,15)");
         
         
                 
@@ -581,7 +594,7 @@ public class AppTest {
         
         soft.add(sof);
         
-        Laboratorio lb = new Laboratorio("Ingenieria de software", 24, "Nicolas Gomez", soft);
+        Laboratorio lb = new Laboratorio("Ingenieria de Software", 24, "Maria Blanco", soft);
         
         Date fc = new Date(2015, 11, 05);
         
@@ -590,12 +603,13 @@ public class AppTest {
         
 
 
-        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi,numcomputadores);
+        Reserva rv = new Reserva(20, fc, pr, lb, 2, 4, reservas, asi,numcomputadores);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-
-        sf.insertReservaReplay(rv);
         
+        
+        compu= sf.reservaLabDisponible(rv.getBloques(),rv.getLaboratorio(),rv.getSemana(),rv.getDia(),rv.getNumcomputadores());
+        Assert.assertTrue("El numero de computadoras excede el limite",compu==false);
     }
     
     @Test

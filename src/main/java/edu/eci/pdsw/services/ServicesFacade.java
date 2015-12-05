@@ -14,6 +14,7 @@ import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
+import static java.lang.reflect.Array.set;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +79,12 @@ public class ServicesFacade {
     /**
      * Verificar si  los bloques son validos (r>0 && r<9)
      * @param rv todos los datos de la reserva a consultar
-     * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los parametros institucionales
+     * @return Bool (True) si el bloque es valido, Bool(False) si el bloque no esta en los Set<Reserva> ans = new LinkedHashSet<>();
+        Reserva rv; 
+        Profesor pr;
+        Laboratorio lb;
+        Asignatura asi = null;
+        Software soft;parametros institucionales
      * @throws ServiceFacadeException
      * @throws PersistenceException
      * @throws SQLException
@@ -203,8 +209,7 @@ public class ServicesFacade {
      * @throws PersistenceException
      */
     public void insertReserva(Reserva rv) throws PersistenceException {
-        System.out.println("entre a reserva ");
-        System.out.println(reservaSemanaDiaValido(rv));
+        
         if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv) && semanaValida(rv.getSemana())){
             DaoFactory df = DaoFactory.getInstance(properties);
 
@@ -441,5 +446,32 @@ public class ServicesFacade {
         }
         return ans;
     }
-    
+    public boolean reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores)  throws PersistenceException,SQLException{
+        
+        boolean boo=true;
+        DaoFactory df = DaoFactory.getInstance(properties);
+
+        df.beginSession();
+        
+        DaoLaboratorio dpro = df.getDaoLaboratorio();
+        
+        Integer[] ans = dpro.reservaLabDisponible(bloques,laboratorio,semana,dia,numcomputadores);
+        
+        for(int i=1;i<9 && boo;i++){
+            if (ans[i]+numcomputadores>laboratorio.getNumerocomputadores()){
+                boo=false;
+                
+            }
+            
+            
+            
+        }
+        df.commitTransaction();
+        df.endSession();
+        
+        
+        return boo;
+        
+        
+    }   
 }

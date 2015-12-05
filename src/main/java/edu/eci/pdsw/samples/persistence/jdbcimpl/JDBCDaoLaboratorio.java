@@ -17,8 +17,11 @@ import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
 import edu.eci.pdsw.entities.Software;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -390,7 +393,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                  **/
                 ps = con.prepareStatement("SELECT sof.nombre, sof.licencia, sof.version, sof.urlDown "
                     + "FROM LABSOFT AS ls, SOFTWARES AS sof "
-                    + "WHERE ls.softwares_nombre = sof.nombre "
+                    + " WHERE ls.softwares_nombre = sof.nombre "
                     + "AND ls.laboratorio_nombre = ?"); 
                 ps.setString(1, rs.getString(1));
                 ResultSet rs1 = ps.executeQuery();
@@ -413,5 +416,51 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         }
         
     }
+    @Override
+    public Integer[] reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores)  throws PersistenceException, SQLException{ 
+       
+        PreparedStatement ps;
+        Integer[] ans=new Integer[9];
+       
+        ps = con.prepareStatement("SELECT rv.id, rv.fechaRadicado, rv.dia, rv.semana, rv.asignatura, "
+                + "rv.profesores_codigo,rv.numcomputadores "
+                + "FROM RESERVAS AS rv "
+                + "WHERE rv.laboratorio_nombre= ? "
+                + "AND rv.semana = ? AND rv.dia = ? ");
+       
+        ps.setString(1, laboratorio.getNombreLab());
+        ps.setInt(2, semana);
+        ps.setInt(3, dia);
+        ResultSet rs = ps.executeQuery();
+       
+     
+        while(rs.next()){
+           
+            ps=con.prepareStatement("SELECT numero FROM BLOQUES "
+                    + "WHERE reservas_id=?");
+            
+            ps.setInt(1, rs.getInt(1));
+            ResultSet rs1 = ps.executeQuery();
+            boolean boo=true;
+       
 
-}
+            while (rs1.next() && boo){
+                boo &= bloques.contains(rs1.getInt(1));              
+       
+            }
+     
+            if (boo){
+                for (Integer i:bloques){
+                    ans[i]=rs.getInt(7);
+                }
+            
+            }
+
+        }
+        return ans;
+    } 
+        }
+        
+    
+    
+

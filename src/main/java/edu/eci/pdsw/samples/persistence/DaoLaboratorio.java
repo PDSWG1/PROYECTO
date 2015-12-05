@@ -8,6 +8,7 @@ package edu.eci.pdsw.samples.persistence;
 import java.util.Set;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Reserva;
+import java.sql.SQLException;
 
 /**
  *
@@ -24,4 +25,6 @@ public interface DaoLaboratorio {
     public Set<Reserva> reservaLabSemanDia(String laboratorio, int semana, int dia) throws PersistenceException;
 
     public Set<Laboratorio> getAlllabs()  throws PersistenceException;
+    
+    public Integer[] reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores) throws PersistenceException,SQLException;
 }
