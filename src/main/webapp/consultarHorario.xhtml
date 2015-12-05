@@ -13,16 +13,16 @@ and open the template in the editor.
         <title>Consultar los horarios de Reserva</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
-    <h:body>
+    <h:body >
         <h:form id="consultaH">
 
             <p:layout style="min-width:800px;min-height:720px;">
             <!-- Semana a buscar -->
-            <p:layoutUnit position="west" resizable = "false" size="450" minSize="80" maxSize="500">
+            <p:layoutUnit position="north" resizable = "false" size="250" minSize="80" maxSize="500">
                 
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                        <p:outputLabel for="lab" value="Semanas universitarias:" />
-                        <p:selectOneMenu id="lab" value="#{beanHorario.semana}" style="width:170px">
+                        <p:outputLabel for="semana" value="Semanas universitarias:" />
+                        <p:selectOneMenu id="semana" value="#{beanHorario.semana}" style="width:170px">
                             <f:selectItem itemLabel="Seleccione una: " itemValue="" />
                             <f:selectItem itemLabel="1" itemValue="1" />
                             <f:selectItem itemLabel="2" itemValue="2" />
@@ -43,75 +43,84 @@ and open the template in the editor.
                         </p:selectOneMenu>
                     </h:panelGrid>
                     
-                <p:commandButton value="Confirmar" actionListener="#{beanHorario.setSemana(lab)}" styleClass="ui-priority-primary" />
-
-                </p:layoutUnit>
-            
-            <!-- Selección del laboratorio deseado -->
-                <p:layoutUnit position="center" size="450">
                     
+                
+                    <!-- Selección del laboratorio deseado -->
+                                   
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                     <h:outputText value="Laboratorios:" />
                     
                     <br></br>
                     
-                    <p:selectOneButton value="#{beanHorario.nombLaboratorio}">
+                    <p:selectOneButton id="nombLab" value="#{beanHorario.nombre}">
                         <f:selectItem itemLabel="Plataformas Computacionales" itemValue="Plataformas Computacionales" />
                         <f:selectItem itemLabel="Laboratorio de Informática" itemValue="Laboratorio de Informática" />
                         <f:selectItem itemLabel="Redes de Computadores" itemValue="Redes de Computadores" />
                         <f:selectItem itemLabel="Multimedia y Móviles" itemValue="Multimedia y Móviles" />
-                        <f:selectItem itemLabel="Sala Inteligente" itemValue="Sala Inteligente" />
+                        <f:selectItem itemLabel="Aula Inteligente" itemValue="Aula Inteligente" />
                     </p:selectOneButton>
-                    </h:panelGrid>
+                    </h:panelGrid>  
+                    
+                    <p:commandButton value="Confirmar" update="consultaH" styleClass="ui-priority-primary" />
+                    
                 </p:layoutUnit>
-            
-                <p:layoutUnit position="south" resizable = "true"  size="360" minSize="80" maxSize="400" style="height:25px;">
-                    Aqui van los horarios
-                    <p:dataTable id="horarios" var="hor" value="#{beanHorario.laboratorios}">
-                        <f:facet name="Horarios disponibles para reservar en la fecha consultada">
-                            Horarios de la fecha consultada
-                        </f:facet>
-                        <p:column headerText="Bloque">
-                            <h:outputText value="#{hor.nombreLab}" />
-                        </p:column>
-
-                        <p:column headerText="Laboratorios">
-                            <p:dataTable
-                                value="#{beanHorario.laboratorios}"
-                                var="f">
-                                <p:column>#{f.nombreLab}</p:column>
-                            </p:dataTable>
-                        </p:column>
-                        
-                        <p:column headerText="Lunes">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                        <p:column headerText="Martes">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                        <p:column headerText="Miercoles">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                        <p:column headerText="Jueves">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                        <p:column headerText="Viernes">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                        <p:column headerText="Sabado">
-                            <h:outputText value="#{hor.encargado}" />
-                        </p:column>
-                        
-                    </p:dataTable>
+                <!--Tabla con reservas con información-->
+                <p:layoutUnit position="center" header="Consulta de Horarios" resizable = "true" size="500" minSize="40" maxSize="500" style="text-align: center;">                    
+                    <p:column headerText="Bloques">
+                        <p:dataTable id="bloques" var="labs" value="#{beanReserva.horario}">
+                            <p:column headerText="Bloques" style="width:100px;height:20px;">
+                                <p:dataTable id="Bloques" var="labs2" value="#{labs.get(0)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Lunes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Lunes" var="labs2" value="#{labs.get(2)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Martes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Martes" var="labs2" value="#{labs.get(3)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Miercoles" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Miercoles" var="labs2" value="#{labs.get(4)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Jueves" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Jueves" var="labs2" value="#{labs.get(5)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Viernes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Viernes" var="labs2" value="#{labs.get(6)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Sabado" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable id="Sabado" var="labs2" value="#{labs.get(7)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
                 </p:layoutUnit>
-               
-            </p:layout>
-                
+            </p:layout>                
 
         </h:form>
     </h:body>

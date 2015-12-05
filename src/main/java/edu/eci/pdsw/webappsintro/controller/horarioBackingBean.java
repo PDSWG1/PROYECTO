@@ -6,9 +6,12 @@
 package edu.eci.pdsw.webappsintro.controller;
 
 import edu.eci.pdsw.entities.Laboratorio;
+import edu.eci.pdsw.samples.persistence.PersistenceException;
+import edu.eci.pdsw.services.ServicesFacade;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -21,28 +24,17 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanHorario")
 @SessionScoped
 public class horarioBackingBean {
-    private int semana = 0;
-    private String nomLaboratorio;
+    private int semana = 1;
     private List<Laboratorio> labs;
-    private Laboratorio selectLabs;
+    private Laboratorio laboratorio;
+    private String nomLabs;
     
-    @PostConstruct
-    public void init() {
-//        /*
-        labs = new ArrayList<>();
-
-        labs.add(new Laboratorio("Plataformas Computacionales", 20, "Johan Ramirez", null));
-        labs.add(new Laboratorio("Laboratorio de Software", 24, "Alejandra Blanco", null));
-        labs.add(new Laboratorio("Redes de Computadores", 20, "Cesar Vega", null));
-        labs.add(new Laboratorio("Multimedia y Móviles", 18, "Luis Felipe Díaz", null));
-        labs.add(new Laboratorio("Sala Inteligente", 30, "Tiffany Estupiñán", null));   
-        //*/
-    }
     
     /*Getter del número de la semana universitaria
      * @return número de la semana universitaria
      */
     public int getSemana(){
+        System.out.println("Estoy en el get " + this.semana);
         return semana;
     }
     
@@ -53,23 +45,31 @@ public class horarioBackingBean {
         this.semana = sem;
     }
     
-    /*Getter del nombre de laboratorio que desea consultar
-     * @param elección del laboratorio que desea consultar
+    /*Getter del número de la semana universitaria
+     * @return número de la semana universitaria
      */
-    public String getNombLaboratorio() {
-        return nomLaboratorio;
+    public String getNombre(){
+        System.out.println("Estoy en el getName " + this.nomLabs);
+        return nomLabs;
     }
-     
+    
+    /*Setter del número de la semana universitaria a buscar
+     * @param número de la semana universitaria a buscar
+     */
+    public void setNombre(String nombLab){
+        this.nomLabs = nombLab;
+    }
+    
     /*Setter del nombre de laboratorio que desea consultar
      * @param elección del laboratorio que desea consultar
      */
     
-    public void setNombreLaboratorio(String nomLab){
-        this.nomLaboratorio = nomLab;
+    public void setLaboratorio(Laboratorio laboratorio) {
+        this.laboratorio = laboratorio;
     }
     
-    public List<Laboratorio> getLaboratorios() {
-        return labs;
+    public Set<Laboratorio> getLaboratorios() throws PersistenceException {
+        return ServicesFacade.getInstance("applicationconfig.properties").getAllLabs();
     }
     
 }
