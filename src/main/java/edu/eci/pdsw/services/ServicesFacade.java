@@ -336,9 +336,11 @@ public class ServicesFacade {
      */
     public ArrayList<ArrayList<ArrayList<booString>>> mostrarInformacionTabla(int semana) throws PersistenceException{
         booString[][] matriz = new booString[48][6];
+        int[][] sumas = new int[48][6];
         for (int i = 0; i < 48; i++){
             for (int j = 0; j < 6; j++){
                 matriz[i][j] = new booString("Disponible");
+                sumas[i][j] = 0;
             }
         }
         
@@ -347,12 +349,18 @@ public class ServicesFacade {
             lb = numLaboratorio(r.getLaboratorio().getNombreLab());
             dia = r.getDia()-1;
             for (int i : r.getBloques()){
+                sumas[lb+((i-1)*6)][dia] += r.getNumcomputadores();
                 if (matriz[lb+((i-1)*6)][dia].getLista().get(0).equals("Disponible")){
-                    matriz[lb+((i-1)*6)][dia] = new booString(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores());
+                    matriz[lb+((i-1)*6)][dia] = new booString(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre());
                 }else{
-                    matriz[lb+((i-1)*6)][dia].setLista(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores());
+                    matriz[lb+((i-1)*6)][dia].setLista(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre());
                 }
             }
+        }
+        Set<Laboratorio> la = getAllLabs();
+        int[] lab = new int[7];
+        for (Laboratorio l: la){
+            lab[numLaboratorio(l.getNombreLab())] = l.getNumerocomputadores();
         }
         a = new ArrayList<>();
         for (int k = 0; k < 8; k++){
@@ -370,6 +378,7 @@ public class ServicesFacade {
                     days.add(labs);
                 }else{
                     for (int j = 0; j < 6; j++){
+                        matriz[(k*6)+j][i-1].setLista("#PC "+(lab[j]-sumas[(k*6)+j][i-1]));
                         labs.add(matriz[(k*6)+j][i-1]);
                     }
                 days.add(labs);
@@ -592,9 +601,9 @@ public class ServicesFacade {
                 for (Reserva r :ans){
                     for (int i : r.getBloques()){
                         if(ans1[i][dia-1].equals("Disponible")){
-                            ans1[i][dia-1] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores()+" ";
+                            ans1[i][dia-1] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }else{
-                            ans1[i][dia-1] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores()+" ";
+                            ans1[i][dia-1] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }
                     }
                 }

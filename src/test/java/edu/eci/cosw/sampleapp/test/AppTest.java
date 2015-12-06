@@ -529,13 +529,13 @@ public class AppTest {
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
 
         ArrayList<ArrayList<ArrayList<booString>>> ans = sf.mostrarInformacionTabla(2);
- 
-        Assert.assertTrue("No coinciden los datos1",ans.get(1).get(5).get(1).toString().equals("PIMO CARO #CR 1"));
-        Assert.assertTrue("No coinciden los datos2",ans.get(1).get(5).get(2).toString().equals("PIMO CARO #CR 1"));
-        Assert.assertTrue("No coinciden los datos3",ans.get(1).get(5).get(3).toString().equals("PIMO CARO #CR 1"));
-        Assert.assertTrue("No coinciden los datos4",ans.get(2).get(5).get(1).toString().equals("PIMO CARO #CR 1"));
-        Assert.assertTrue("No coinciden los datos5",ans.get(2).get(5).get(2).toString().equals("PIMO CARO #CR 1"));
-        Assert.assertTrue("No coinciden los datos6",ans.get(2).get(5).get(3).toString().equals("PIMO CARO #CR 1")); 
+        
+        Assert.assertTrue("No coinciden los datos1",ans.get(1).get(5).get(1).toString().equals("PIMO CARO; #PC 19"));
+        Assert.assertTrue("No coinciden los datos2",ans.get(1).get(5).get(2).toString().equals("PIMO CARO; #PC 19"));
+        Assert.assertTrue("No coinciden los datos3",ans.get(1).get(5).get(3).toString().equals("PIMO CARO; #PC 19"));
+        Assert.assertTrue("No coinciden los datos4",ans.get(2).get(5).get(1).toString().equals("PIMO CARO; #PC 19"));
+        Assert.assertTrue("No coinciden los datos5",ans.get(2).get(5).get(2).toString().equals("PIMO CARO; #PC 19"));
+        Assert.assertTrue("No coinciden los datos6",ans.get(2).get(5).get(3).toString().equals("PIMO CARO; #PC 19")); 
         
     }
 
@@ -734,16 +734,13 @@ public class AppTest {
         
         boolean boo = true;
         for (int k = 0; k < 8; k++){
-            for(int i = 0; i < 6; i++){
+            for(int i = 2; i < 8; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
-                    System.out.print(a.get(k).get(i).get(j).toString()+" ");
                     if( j == 0 && !a.get(k).get(i).get(j).isDisponible()){
                         boo = false;
                     }
                 }    
-                System.out.println("");
             }
-            System.out.println("");
         } 
         Assert.assertTrue("No coinciden los valores", boo);
     }
@@ -902,10 +899,10 @@ public class AppTest {
         
         String[][] ans1 = new String[][]{
             {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"PIMO CARO #CR 1 " , "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"PIMO CARO #CR 1 PIMO CARO #CR 3 " , "Disponible", "PIMO CARO #CR 7 " , "PIMO CARO #CR 1 " , "Disponible", "Disponible"},
-            {"PIMO CARO #CR 1 PIMO CARO #CR 3 " , "Disponible", "PIMO CARO #CR 7 " , "PIMO CARO #CR 1 " , "Disponible", "Disponible"},
-            {"Disponible", "Disponible", "PIMO CARO #CR 7 " , "Disponible", "Disponible", "Disponible"},
+            {"PIMO CARO; " , "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
+            {"PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
+            {"Disponible", "Disponible", "PIMO CARO; " , "Disponible", "Disponible", "Disponible"},
             {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
             {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
             {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"}};

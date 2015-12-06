@@ -67,20 +67,27 @@ and open the template in the editor.
                         </p:layoutUnit>
                         
                         <p:layoutUnit id="CenterSouth" header="Reserva" position="south" resizable = "true" size="250" minSize="40" maxSize="250" >
-                            <p:panelGrid  columns="2" columnClasses="label,value">
-                                <h:outputText value="Numero de Computadores: "/>
-                                <p:inputText value="#{beanReserva.numComputadores}"/>
+                            <p:layout style="height:500px;">
+                                <p:layoutUnit id="CenterSouthWest" header="Disponibilidad" position="west" resizable = "true" size="1000" minSize="40" maxSize="1000" >
+                                    <p:panelGrid  columns="2" columnClasses="label,value">
+                                        <h:outputText value="Numero de Computadores: "/>
+                                        <p:inputText value="#{beanReserva.numComputadores}"/>
+
+                                        <h:outputText value="Software: "/>
+                                        <p:selectManyCheckbox id="softwares" value="#{beanReserva.softs}" layout="grid" columns="4">
+                                            <f:selectItems value="#{beanReserva.allSoftwares}" var="software" itemLabel="#{software.nombre}" itemValue="#{software.nombre}" />
+                                        </p:selectManyCheckbox>
+                                        
+                                    </p:panelGrid>
+                                    <p:commandButton value="Confirmar Disponibilidad" icon="ui-icon-check" actionListener="#{beanReserva.makeFiltro}" update="reserva"/>
+                                </p:layoutUnit>
                                 
-                                <h:outputText value="Software: "/>
-                                <p:selectManyCheckbox id="softwares" value="#{beanReserva.softs}" layout="grid" columns="4">
-                                    <f:selectItems value="#{beanReserva.allSoftwares}" var="software" itemLabel="#{software.nombre}" itemValue="#{software.nombre}" />
-                                </p:selectManyCheckbox>
-                            </p:panelGrid>
-                            
-                            <p:commandButton value="Confirmar Disponibilidad" icon="ui-icon-check" actionListener="#{beanReserva.makeFiltro}" update="reserva"/>
-                            <p:commandButton value="Realizar Reserva" update="reserva" oncomplete="PF('HR').show()" 
+                                <p:layoutUnit id="CenterSouthCenter" position="center" resizable = "true" size="500" minSize="40" maxSize="500" >
+                                    <p:commandButton value="Realizar Reserva" update="reserva" oncomplete="PF('HR').show()" 
                                              icon="ui-icon-check" />
-                                
+                                    <p:commandButton value="Salir" action="principal.xhtml" styleClass="ui-priority-primary" />
+                                </p:layoutUnit>
+                            </p:layout>    
                         </p:layoutUnit>
                     </p:layout>
                 </p:layoutUnit>
