@@ -20,7 +20,6 @@ public class loginBackingBean {
     private String username; 
     
     public String getPassword1() {
-        System.out.println("contraseña: " + password);
         return password;
     }
  
@@ -29,7 +28,6 @@ public class loginBackingBean {
     }
     
     public String getUser() {
-        System.out.println("user: " + username);
         return username;
     }
  

@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import edu.eci.pdsw.entities.Profesor;
 import java.util.HashSet;
 import java.util.Set;
-import javax.servlet.jsp.jstl.sql.Result;
 
 /**
  *

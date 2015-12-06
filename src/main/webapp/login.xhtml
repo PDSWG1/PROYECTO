@@ -11,24 +11,32 @@ and open the template in the editor.
     <h:head>
         <title>Login de Reserva</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style type="text/css">
+            body{
+                background: mediumseagreen;
+            }
+        </style>
     </h:head>
     <h:body>
         <h:form id="login">
             <p:layout style="min-width:700px;min-height:720px;">
                 <!-- Semana a buscar -->
-                <p:layoutUnit position="center" resizable = "false" size="200" minSize="80" maxSize="300">
+                <p:layoutUnit position="north" resizable = "false" size="50" minSize="30" maxSize="300" style=" text-align: center;  background: mediumseagreen">
+                    <h:outputText value="¡BIENVENIDO PROFESOR!" style="font-size: larger" />
+                </p:layoutUnit>
+                <p:layoutUnit position="center" resizable = "false" size="200" minSize="80" maxSize="300" style="text-align: center;  background: mediumseagreen">
                     <h:outputText value="Ingrese los datos para realizar la reserva" />
                     
                     <p:separator />
                                         
                     <h:outputLabel for="usern" value="Usuario: " />
-                    <p:inputText id="usern" required="true" value="#{beanLogin.setUser(usern)}"/>
+                    <p:inputText id="usern" required="true" value="#{beanLogin.user}"/>
                     <p:message for="usern" display="text" />
 
                     <br></br>
 
                     <h:outputLabel value="Contraseña: " />
-                    <p:password required="true" value="#{beanLogin.setPassword1(password1)}" match="#{beanLogin.password1}" />
+                    <p:password required="true" value="#{beanLogin.password1}" match="#{beanLogin.password1}" />
                 
                     <p:separator />
                 

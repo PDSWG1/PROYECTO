@@ -6,13 +6,12 @@
 package edu.eci.pdsw.webappsintro.controller;
 
 import edu.eci.pdsw.entities.Laboratorio;
+import edu.eci.pdsw.entities.booString;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServicesFacade;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -24,17 +23,17 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanHorario")
 @SessionScoped
 public class horarioBackingBean {
-    private int semana = 1;
+    private int semana = 1, semanaRespaldo= 0;;
     private List<Laboratorio> labs;
     private Laboratorio laboratorio;
     private String nomLabs;
+    private ArrayList<ArrayList<ArrayList<booString>>> horario;
     
     
     /*Getter del número de la semana universitaria
      * @return número de la semana universitaria
      */
     public int getSemana(){
-        System.out.println("Estoy en el get " + this.semana);
         return semana;
     }
     
@@ -49,7 +48,6 @@ public class horarioBackingBean {
      * @return número de la semana universitaria
      */
     public String getNombre(){
-        System.out.println("Estoy en el getName " + this.nomLabs);
         return nomLabs;
     }
     
@@ -67,6 +65,19 @@ public class horarioBackingBean {
     public void setLaboratorio(Laboratorio laboratorio) {
         this.laboratorio = laboratorio;
     }
+    
+    public ArrayList<ArrayList<ArrayList<booString>>> getHorario() throws PersistenceException {
+        if (semana != semanaRespaldo){
+            horario = ServicesFacade.getInstance("applicationconfig.properties").mostrarInformacionTabla(semana);
+            semanaRespaldo = semana;
+        }
+        return horario;
+    }
+    
+    public void setHorario(ArrayList<ArrayList<ArrayList<booString>>> horario) {
+        this.horario = horario;
+    }
+
     
     public Set<Laboratorio> getLaboratorios() throws PersistenceException {
         return ServicesFacade.getInstance("applicationconfig.properties").getAllLabs();
