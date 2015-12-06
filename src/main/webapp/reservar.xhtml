@@ -18,7 +18,7 @@ and open the template in the editor.
             <p:layout style="width: 1780px;height:1000px;">
                 <p:layoutUnit id="Center" position="center" resizable = "true" size="500" minSize="40" maxSize="500">
                     <p:layout style="height:500px;">
-                        <!-- Panel de Reserva -->
+                        <!-- Panel selección de semana -->
                         <p:layoutUnit id="CenterWest" header="Semana Universitaria" position="west" resizable = "true" 
                                       size="300" minSize="40" maxSize="300" style="text-align: center;">
                             <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
@@ -43,8 +43,7 @@ and open the template in the editor.
                                 </p:selectOneMenu>
                             </h:panelGrid>
 
-                            <p:commandButton value="Consultar Semana" actionListener="#{beanReserva.setSemana(sem)}" 
-                                             styleClass="ui-priority-primary" update="reserva" />
+                            <p:commandButton value="Consultar Semana" styleClass="ui-priority-primary" update="reserva" />
 
                         </p:layoutUnit>
 
@@ -63,54 +62,94 @@ and open the template in the editor.
                         </p:layoutUnit>
                         
                         <p:layoutUnit id="CenterSouth" header="Reserva" position="south" resizable = "true" size="250" minSize="40" maxSize="250" >
-                            <p:column>
-                                <p:outputLabel value="Semana: "/>
-                                <h:outputText value="#{beanReserva.semana}" />
-                            </p:column>
-                            <p:column>
-                                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                    <p:outputLabel for="day" value="Dia: " />
-                                    <p:selectOneMenu id="day" value="#{beanReserva.dia}" >
-                                        <f:selectItem itemLabel="Lunes" itemValue="1" />
-                                        <f:selectItem itemLabel="Martes" itemValue="2" />
-                                        <f:selectItem itemLabel="Miercoles" itemValue="3" />
-                                        <f:selectItem itemLabel="Jueves" itemValue="4" />
-                                        <f:selectItem itemLabel="Viernes" itemValue="5" />
-                                        <f:selectItem itemLabel="Sabado" itemValue="6" />
-                                    </p:selectOneMenu>
-                                </h:panelGrid>
-                            </p:column>
-                            <p:column>
-                                <p:outputLabel value="  Laboratorio: "/>
-                                <h:outputText value="#{beanReserva.laboratorio.nombreLab}" />
-                            </p:column>
-                            <br></br>
-                            <p:column>
-                                <p:outputLabel value="  Computadores: "/>
-                                <h:outputText value="#{beanReserva.laboratorio.numerocomputadores}" />
-                            </p:column>
-                            <br></br>
-                            <p:column>
-                                <p:outputLabel value="  Bloques: " />
-                                <p:selectManyCheckbox id="grid" value="#{beanReserva.selectedBloques}" layout="grid" columns="4">
-                                        <f:selectItems value="#{beanReserva.bloques}" var="bloque" itemLabel="#{bloque}" itemValue="#{bloque}" />
+                            <p:panelGrid  columns="2" columnClasses="label,value">
+                                <h:outputText value="Numero de Computadores: "/>
+                                <p:inputText value="#{beanReserva.numComputadores}"/>
+                                
+                                <h:outputText value="Software: "/>
+                                <p:selectManyCheckbox id="softwares" value="#{beanReserva.softs}" layout="grid" columns="4">
+                                    <f:selectItems value="#{beanReserva.allSoftwares}" var="software" itemLabel="#{software.nombre}" itemValue="#{software.nombre}" />
                                 </p:selectManyCheckbox>
-                            </p:column>
-                            <p:column>
-                                <p:outputLabel value="  Repetir reserva: " />
-                                <p:selectBooleanCheckbox id="gridRepetir" value="#{beanReserva.repetir}"></p:selectBooleanCheckbox>
-                            </p:column>
-                            <br></br>
-                            <p:commandButton value="Submit" update="reserva" oncomplete="PF('dlg').show()" 
-                                             icon="ui-icon-check" actionListener="#{beanReserva.makeReserva}"/>
+                            </p:panelGrid>
+                            
+                            <p:commandButton value="Confirmar Disponibilidad" icon="ui-icon-check" actionListener="#{beanReserva.makeFiltro}" update="reserva"/>
+                            <p:commandButton value="Realizar Reserva" update="reserva" oncomplete="PF('HR').show()" 
+                                             icon="ui-icon-check" />
+                                
                         </p:layoutUnit>
                     </p:layout>
                 </p:layoutUnit>
 
                 <!--Tabla con reservas con información-->
                 <p:layoutUnit id="South" header="Horarios Disponibles" position="south" resizable = "true" size="500" minSize="40" maxSize="500" style="text-align: center;">                    
-                    <p:column headerText="Bloques">
+                    <p:column headerText="Bloques" rendered="#{not beanReserva.booFiltro}">
                         <p:dataTable id="bloques" var="labs" value="#{beanReserva.horario}">
+                            <p:column headerText="Bloques" style="width:100px;height:20px;">
+                                <p:dataTable var="labs2" value="#{labs.get(0)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Laboratorios" style="width:150px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(1)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Lunes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(2)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Martes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(3)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Miercoles" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(4)}">
+                                    <p:column >
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Jueves" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(5)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Viernes" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(6)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                            <p:column headerText="Sabado" style="width:100px;height:20px;text-align: center;">
+                                <p:dataTable var="labs2" value="#{labs.get(7)}">
+                                    <p:column>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+                    <p:column headerText="Bloques" rendered="#{beanReserva.booFiltro}">
+                        <p:dataTable var="labs" value="#{beanReserva.horarioDisponible}">
                             <p:column headerText="Bloques" style="width:100px;height:20px;">
                                 <p:dataTable id="Bloques" var="labs2" value="#{labs.get(0)}">
                                     <p:column>
@@ -119,51 +158,57 @@ and open the template in the editor.
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Laboratorios" style="width:150px;height:20px;text-align: center;">
-                                <p:dataTable id="Laboratorios" var="labs2" value="#{labs.get(1)}">
+                                <p:dataTable var="labs2" value="#{labs.get(1)}">
                                     <p:column>
                                         <h:outputText value="#{labs2}" />
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Lunes" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Lunes" var="labs2" value="#{labs.get(2)}">
+                                <p:dataTable var="labs2" value="#{labs.get(2)}">
                                     <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Martes" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Martes" var="labs2" value="#{labs.get(3)}">
+                                <p:dataTable var="labs2" value="#{labs.get(3)}">
                                     <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Miercoles" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Miercoles" var="labs2" value="#{labs.get(4)}">
-                                    <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                <p:dataTable var="labs2" value="#{labs.get(4)}">
+                                    <p:column >
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Jueves" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Jueves" var="labs2" value="#{labs.get(5)}">
+                                <p:dataTable var="labs2" value="#{labs.get(5)}">
                                     <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Viernes" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Viernes" var="labs2" value="#{labs.get(6)}">
+                                <p:dataTable var="labs2" value="#{labs.get(6)}">
                                     <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
                             <p:column headerText="Sabado" style="width:100px;height:20px;text-align: center;">
-                                <p:dataTable id="Sabado" var="labs2" value="#{labs.get(7)}">
+                                <p:dataTable var="labs2" value="#{labs.get(7)}">
                                     <p:column>
-                                        <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{!labs2.isDisponible()}"/>
+                                        <h:outputText value="#{labs2.toString()}" rendered="#{labs2.isDisponible()}" style="background: #FFD700 !important;"/>
                                     </p:column>
                                 </p:dataTable>
                             </p:column>
@@ -184,7 +229,7 @@ and open the template in the editor.
                         <h:outputText value="#{beanReserva.laboratorio.nombreLab}" />
 
                         <h:outputText value="Número de computadores" />
-                        <h:outputText value="#{beanReserva.laboratorio.numerocomputadores}" />
+                        <h:outputText value="#{beanReserva.laboratorio.numerocomputadores}"/>
 
                         <h:outputText value="Encargado de la sala:" />
                         <h:outputText value="#{beanReserva.laboratorio.encargado}" />
@@ -199,11 +244,75 @@ and open the template in the editor.
                 </p:outputPanel>
             </p:dialog> 
                         
-            <p:dialog header="Su Reserva es" widgetVar="dlg" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "500">
-                <p:outputPanel id="dlg" style="text-align:center;">
-                    YAAAAA :D!!!
+            <p:dialog header="Haga su reserva" widgetVar="HR" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "800">
+                <p:outputPanel id="dlg1" style="text-align:center; " rendered="#{empty beanReserva.laboratorio}">
+                    <h:outputText value="Por favor seleccione un laboratorio en el panel anterior."/>
+                    <br></br>
+                    <p:commandButton value="Aceptar" oncomplete="PF('HR').hide()" icon="ui-icon-check" />
+                </p:outputPanel>
+                <p:outputPanel id="dlg" style="text-align:center; " rendered="#{not empty beanReserva.laboratorio}">
+                    <p:panelGrid columns="2" columnClasses="label,value">
+                        <h:outputText value="Semana: "/>
+                        <h:outputText value="#{beanReserva.semana}" />
+                            
+                        <h:outputText value="Dia: "/>
+                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="day" value="Dia: " />
+                            <p:selectOneMenu id="day" value="#{beanReserva.dia}" >
+                                <f:selectItem itemLabel="Lunes" itemValue="1" />
+                                <f:selectItem itemLabel="Martes" itemValue="2" />
+                                <f:selectItem itemLabel="Miercoles" itemValue="3" />
+                                <f:selectItem itemLabel="Jueves" itemValue="4" />
+                                <f:selectItem itemLabel="Viernes" itemValue="5" />
+                                <f:selectItem itemLabel="Sabado" itemValue="6" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                        <h:outputText value="Laboratorio: "/>
+                        <h:outputText value="#{beanReserva.laboratorio.nombreLab}" />
+
+                        <h:outputText value="Computadores: "/>
+                        <h:inputText value="#{beanReserva.numComputadoresReserva}" />
+
+                        <h:outputText value="Bloques: " />
+                        <p:selectManyCheckbox id="grid" value="#{beanReserva.selectedBloques}" layout="grid" columns="4">
+                            <f:selectItems value="#{beanReserva.bloques}" var="bloque" itemLabel="#{bloque}" itemValue="#{bloque.lista.get(0)}" />
+                        </p:selectManyCheckbox>
+
+                        <h:outputText value="Repetir reserva: " />
+                        <p:selectBooleanCheckbox id="gridRepetir" value="#{beanReserva.repetir}"></p:selectBooleanCheckbox>
+                    </p:panelGrid>
+                    <p:column>
+                        
+                    <p:commandButton value="Submit" oncomplete="PF('SRE').show()"
+                                     icon="ui-icon-check" actionListener="#{beanReserva.makeReserva}"/>
+                    <p:commandButton value="Cancel" oncomplete="PF('HR').hide()" 
+                                         icon="ui-icon-check" />
+
+                    </p:column>
                 </p:outputPanel>
             </p:dialog> 
+            
+            <p:dialog header="Su Reserva es" widgetVar="SRE" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "800">
+                <p:outputPanel style="text-align:center; " >
+                    <p:column rendered="#{beanReserva.index != 0}">
+                        <h:outputText value = "Su reserva se a ingresado con exito con el id: " />
+                        <h:outputText value = "#{beanReserva.index}"/>
+                        <br></br>
+                        <p:commandButton value="Aceptar" oncomplete="PF('SRE').hide()" update="reserva" 
+                             icon="ui-icon-check" />
+                    </p:column>
+                    <p:column rendered="#{beanReserva.index == 0}">
+                        <h:outputText value = "Su reserva no se pudo ingresar" />
+                        <br></br>
+                        <p:commandButton value="Aceptar" oncomplete="PF('SRE').hide()" update="reserva" 
+                             icon="ui-icon-check" />
+                    </p:column>
+
+
+                </p:outputPanel>
+
+            </p:dialog>
         </h:form>
     </h:body>
 </html>

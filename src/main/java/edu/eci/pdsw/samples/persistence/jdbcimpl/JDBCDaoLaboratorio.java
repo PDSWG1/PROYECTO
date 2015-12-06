@@ -56,7 +56,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
             //Consulta de las reservas que existen en la semana ingresada como parámetro 
             ps = con.prepareStatement("SELECT rv.id, rv.fechaRadicado, rv.dia, rv.semana, rv.asignatura, "
                     + "rv.laboratorio_nombre, rv.profesores_codigo, pr.nombre, pr.codigoNombre, pr.email, "
-                    + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado,rv.numcomputadores "
+                    + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado, rv.numcomputadores "
                     + "FROM RESERVAS AS rv, PROFESORES AS pr, LABORATORIOS AS lb "
                     + "WHERE rv.laboratorio_nombre = lb.nombre AND rv.profesores_codigo = pr.codigo "
                     + "AND rv.semana = ?");
@@ -153,7 +153,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                 }
 
                 //creación de la reserva
-                rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi,rs.getInt(15));
+                rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi, rs.getInt(15));
                 ans.add(rv);
             }
             return ans;
@@ -459,8 +459,74 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         }
         return ans;
     } 
-        }
         
-    
-    
+    @Override
+    public Set<Software> getAllSoftware() throws PersistenceException{
+        try{
+            Set<Software> sos = new LinkedHashSet<>();
+            Software so; 
+            PreparedStatement ps;
+            ps = con.prepareStatement("SELECT nombre, licencia, version, urlDown "
+                    + "FROM SOFTWARES ");
+  
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+               
+                /**
+                 * nombre --> 1
+                 * licencia --> 2
+                 * version --> 3
+                 * urlDown --> 4
+                 **/
+                so = new Software(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));  
+                sos.add(so);
+            }
+            return sos;
+        }catch(SQLException ex){
+            throw new PersistenceException("An error ocurred while loading all Software.",ex);
+        }
+    }
 
+    @Override
+    public Software getSoftware(String nombre) throws PersistenceException{
+        try{
+            Software sos = null;
+            PreparedStatement ps;
+            ps = con.prepareStatement("SELECT nombre, licencia, version, urlDown "
+                    + "FROM SOFTWARES "
+                    + "WHERE nombre = ?");
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Software so; 
+                /**
+                 * nombre --> 1
+                 * licencia --> 2
+                 * version --> 3
+                 * urlDown --> 4
+                 **/
+                sos = new Software(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));  
+            }
+            return sos;
+        }catch(SQLException ex){
+            throw new PersistenceException("An error ocurred while loading all Software.",ex);
+        }
+    }
+
+    @Override
+    public int getIndexReserva() throws PersistenceException{
+        try{
+            int i = 0;
+            PreparedStatement ps;
+            ps = con.prepareStatement("SELECT * "
+                    + "FROM RESERVAS ");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                i++;
+            }
+            return i+1;
+        }catch(SQLException ex){
+            throw new PersistenceException("An error ocurred while loading of index.",ex);
+        }
+    }
+}

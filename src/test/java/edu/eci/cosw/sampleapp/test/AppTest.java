@@ -1,10 +1,6 @@
 package edu.eci.cosw.sampleapp.test;
 
-import edu.eci.pdsw.entities.Asignatura;
-import edu.eci.pdsw.entities.Laboratorio;
-import edu.eci.pdsw.entities.Profesor;
-import edu.eci.pdsw.entities.Reserva;
-import edu.eci.pdsw.entities.Software;
+import edu.eci.pdsw.entities.*;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServiceFacadeException;
 import edu.eci.pdsw.services.ServicesFacade;
@@ -18,8 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -533,14 +527,14 @@ public class AppTest {
 
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
 
-        ArrayList<ArrayList<ArrayList<String>>> ans = sf.mostrarInformacionTabla(2);
+        ArrayList<ArrayList<ArrayList<booString>>> ans = sf.mostrarInformacionTabla(2);
  
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(1).equals("PIMO CARO"));
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(2).equals("PIMO CARO"));
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(3).equals("PIMO CARO"));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(1).equals("PIMO CARO"));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).equals("PIMO CARO"));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).equals("PIMO CARO")); 
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(1).toString().equals("PIMO CARO "));
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(2).toString().equals("PIMO CARO "));
+        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(3).toString().equals("PIMO CARO "));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(1).toString().equals("PIMO CARO "));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).toString().equals("PIMO CARO "));
+        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).toString().equals("PIMO CARO ")); 
         
     }
 
@@ -613,33 +607,213 @@ public class AppTest {
     }
     
     @Test
-    public void informacionProfesor(){
-        try{
-            clearDB();
-            Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
-            Statement stmt = conn.createStatement();
+    public void informacionProfesor() throws SQLException, PersistenceException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
 
-            stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
-                    + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
-            
-            ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-            
-            Profesor pr = sf.getProfesor(2096139);
-            
-            Assert.assertTrue("No coinciden los datos",pr.getCodigo() == 2096139);
-            Assert.assertTrue("No coinciden los datos",pr.getNombre().equals("Camilo Rocha"));
-            Assert.assertTrue("No coinciden los datos",pr.getCodigoNombre().equals("CARO"));
-            Assert.assertTrue("No coinciden los datos",pr.getEmail().equals("camilo.rocha@escuelaing.edu.co"));
-            Assert.assertTrue("No coinciden los datos",pr.getTelefono() == Long.parseLong("3134723033"));
-            Assert.assertTrue("No coinciden los datos",pr.getCedula() == Long.parseLong("1013628836")); 
-            
-        } catch (PersistenceException ex) {
-            Logger.getLogger(AppTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(AppTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
 
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
 
+        Profesor pr = sf.getProfesor(2096139);
+
+        Assert.assertTrue("No coinciden los datos",pr.getCodigo() == 2096139);
+        Assert.assertTrue("No coinciden los datos",pr.getNombre().equals("Camilo Rocha"));
+        Assert.assertTrue("No coinciden los datos",pr.getCodigoNombre().equals("CARO"));
+        Assert.assertTrue("No coinciden los datos",pr.getEmail().equals("camilo.rocha@escuelaing.edu.co"));
+        Assert.assertTrue("No coinciden los datos",pr.getTelefono() == Long.parseLong("3134723033"));
+        Assert.assertTrue("No coinciden los datos",pr.getCedula() == Long.parseLong("1013628836")); 
+           
     }
-} 
+    
+    @Test
+    public void filtroSoftwareNumComputadores() throws SQLException, PersistenceException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
 
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo, numcomputadores) "
+            + "VALUES (22, NOW(), 2, 4, 'PIMO', 'Multimedia y Moviles', 2096139, 1)");
+        
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Multimedia y Moviles', 7, 'Nicolas Gomez')");
+
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Unity', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Python', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('NetBeans', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Eclipse', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Multimedia y Moviles', 'Unity')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Multimedia y Moviles', 'Python')");
+
+        stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
+                + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
+
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (22, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (22, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (23, NOW(), 2, 1, 'PIMO', 'Ingenieria de software', 2096139, 1)");
+        
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Ingenieria de software', 20, 'Nicolas Gomez')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Ingenieria de software', 'Unity')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Ingenieria de software', 'Python')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Ingenieria de software', 'NetBeans')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Ingenieria de software', 'Eclipse')");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 1)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (24, NOW(), 2, 2, 'PIMO', 'Multimedia y Moviles', 2096139, 3)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (24, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (24, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (25, NOW(), 2, 3, 'PIMO', 'Ingenieria de software', 2096139, 7)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 3)");        
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 4)");
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        //retornar laboratorios y horas
+
+        int numComputadores = 1;
+        Set<String> softs = new HashSet<>();
+        softs.add("Unity");
+        softs.add("Python");
+        softs.add("NetBeans");
+        int semana = 2;
+
+        sf.mostrarInformacionTabla(semana);
+        ArrayList<ArrayList<ArrayList<booString>>> a = sf.getDispFiltroSoftwareNumCompu(numComputadores, softs, semana);
+        boolean boo = true;
+        for (int k = 0; k < 8; k++){
+            for(int i = 0; i < 6; i++){
+                for (int j = 0; j < a.get(k).get(i).size(); j++){
+                    if( j == 0 && !a.get(k).get(i).get(j).isDisponible()){
+                        boo = false;
+                    }
+                }     
+            }
+        } 
+        Assert.assertTrue("No coinciden los valores", boo);
+    }
+    
+    @Test
+    public void getAllSoftware() throws SQLException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Unity', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Python', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('NetBeans', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Eclipse', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        Set<String> sof = new HashSet<>();
+        sof.add("Unity");
+        sof.add("Python");
+        sof.add("NetBeans");
+        sof.add("Eclipse");
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        Set<Software> softs = sf.getAllSoftware();
+        int ban = 0;
+        for (Software s: softs){
+            if(sof.contains(s.getNombre())){
+                ban++;
+            }
+        }
+        
+        Assert.assertTrue("No coinciden los valores", ban == 4);
+    } 
+    
+    @Test
+    public void getSoftware() throws SQLException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Unity', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Python', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('NetBeans', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Eclipse', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        Software soft = sf.getSoftware("Eclipse");
+        
+        Assert.assertTrue("No coinciden los valores", soft.getNombre().equals("Eclipse"));
+        
+        soft = sf.getSoftware("Unity");
+        
+        Assert.assertTrue("No coinciden los valores", soft.getNombre().equals("Unity"));
+        
+        soft = sf.getSoftware("Python");
+        
+        Assert.assertTrue("No coinciden los valores", soft.getNombre().equals("Python"));
+        
+        soft = sf.getSoftware("NetBeans");
+        
+        Assert.assertTrue("No coinciden los valores", soft.getNombre().equals("NetBeans"));
+    } 
+} 

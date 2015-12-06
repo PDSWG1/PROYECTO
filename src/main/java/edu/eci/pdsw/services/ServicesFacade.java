@@ -8,6 +8,8 @@ package edu.eci.pdsw.services;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
+import edu.eci.pdsw.entities.Software;
+import edu.eci.pdsw.entities.booString;
 import edu.eci.pdsw.samples.persistence.DaoFactory;
 import edu.eci.pdsw.samples.persistence.DaoLaboratorio;
 import edu.eci.pdsw.samples.persistence.DaoProfesor;
@@ -62,13 +64,13 @@ public class ServicesFacade {
         Set<Reserva> ans = null;
         if (semanaValida(semana)) {
             DaoFactory df = DaoFactory.getInstance(properties);
-
+            
             df.beginSession();
-
+            
             DaoLaboratorio dpro = df.getDaoLaboratorio();
-
+            
             ans = dpro.reservaEsperadar(semana);
-
+            
             df.commitTransaction();
 
             df.endSession();
@@ -109,32 +111,32 @@ public class ServicesFacade {
      * @param bloque
      * @return bloque transformado en su string en horas
     **/
-    public static ArrayList<String> transformadorBloqueString(int bloque){
-        ArrayList<String> bloques=new ArrayList<>();
+    public static ArrayList<booString> transformadorBloqueString(int bloque){
+        ArrayList<booString> bloques=new ArrayList<>();
         switch (bloque) {
             case 1:
-                bloques.add("7:00am-8:30am");
+                bloques.add(new booString("7:00am-8:30am"));
                 break;
             case 2:
-                bloques.add("8:30am-10:00am");
+                bloques.add(new booString("8:30am-10:00am"));
                 break;
             case 3:
-                bloques.add("10:00am-11:30pm");
+                bloques.add(new booString("10:00am-11:30pm"));
                 break;
             case 4:
-                bloques.add("11:30pm-1:00pm");
+                bloques.add(new booString("11:30pm-1:00pm"));
                 break;
             case 5:
-                bloques.add("1:00pm-2:30pm");
+                bloques.add(new booString("1:00pm-2:30pm"));
                 break;
             case 6:
-                bloques.add("2:30pm-4:00pm");
+                bloques.add(new booString("2:30pm-4:00pm"));
                 break;
             case 7:
-                bloques.add("4:00pm-5:30pm");
+                bloques.add(new booString("4:00pm-5:30pm"));
                 break;
             case 8:   
-                bloques.add("5:30pm-7:00pm");
+                bloques.add(new booString("5:30pm-7:00pm"));
                 break;
             default:
                 break;
@@ -209,7 +211,6 @@ public class ServicesFacade {
      * @throws PersistenceException
      */
     public void insertReserva(Reserva rv) throws PersistenceException {
-        
         if (reservaHorarioValido(rv) && reservaSemanaDiaValido(rv) && reservaNumBloquesValido(rv) && semanaValida(rv.getSemana())){
             DaoFactory df = DaoFactory.getInstance(properties);
 
@@ -222,8 +223,9 @@ public class ServicesFacade {
             df.commitTransaction();
 
             df.endSession();
+        }else{
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, "No se puede realizar la reserva", "No se puede realizar la reserva");
         }
-        
     }
     
     /**
@@ -243,14 +245,10 @@ public class ServicesFacade {
 
         Set<Reserva> ans = dpro.reservaLabSemanDia(rv.getLaboratorio().getNombreLab(), rv.getSemana(), rv.getDia());
         
-        Iterator<Reserva> i = ans.iterator();
-        
-        while (i.hasNext()){
-            Reserva r = i.next();
+        for (Reserva r : ans){
             boo = true;
-            Iterator<Integer> j = r.getBloques().iterator();
-            while (j.hasNext()){
-                boo &= rv.getBloques().contains(j.next());
+            for (int j : r.getBloques()){
+                boo &= rv.getNumcomputadores()+r.getNumcomputadores() <= rv.getLaboratorio().getNumerocomputadores();
             }
         }
 
@@ -314,10 +312,10 @@ public class ServicesFacade {
     
     private static final String[][] matrizLLena = new String[48][6];
     private int lb, dia;
-    private ArrayList<ArrayList<ArrayList<String>>> a;
-    private ArrayList<ArrayList<String>> days;
-    private ArrayList<String> labs;
-    private static final ArrayList<String> bloques = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<booString>>> a;
+    private ArrayList<ArrayList<booString>> days;
+    private ArrayList<booString> labs;
+    private static final ArrayList<booString> bloques = new ArrayList<>();
     static{
         for(String[] s: matrizLLena){
             Arrays.fill(s, "Disponible");
@@ -327,7 +325,7 @@ public class ServicesFacade {
         }
     }
     
-    public ArrayList<String> getBloques(){
+    public ArrayList<booString> getBloques(){
         return bloques;
     }
     /**
@@ -336,14 +334,24 @@ public class ServicesFacade {
      * @return 
      * @throws PersistenceException
      */
-    public ArrayList<ArrayList<ArrayList<String>>> mostrarInformacionTabla(int semana) throws PersistenceException{
-        String[][] matriz = matrizLLena;
+    public ArrayList<ArrayList<ArrayList<booString>>> mostrarInformacionTabla(int semana) throws PersistenceException{
+        booString[][] matriz = new booString[48][6];
+        for (int i = 0; i < 48; i++){
+            for (int j = 0; j < 6; j++){
+                matriz[i][j] = new booString("Disponible");
+            }
+        }
+        
         Set<Reserva> ans = reservaEsperadar(semana);
         for (Reserva r :ans){
             lb = numLaboratorio(r.getLaboratorio().getNombreLab());
             dia = r.getDia()-1;
             for (int i : r.getBloques()){
-                matriz[lb+((i-1)*6)][dia] = (r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre());
+                if (matriz[lb+((i-1)*6)][dia].getLista().get(0).equals("Disponible")){
+                    matriz[lb+((i-1)*6)][dia] = new booString(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #"+r.getNumcomputadores());
+                }else{
+                    matriz[lb+((i-1)*6)][dia].setLista(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #"+r.getNumcomputadores());
+                }
             }
         }
         a = new ArrayList<>();
@@ -353,12 +361,12 @@ public class ServicesFacade {
             for(int i = 0; i < 7; i++){
                 labs = new ArrayList<>();
                 if(i==0){
-                    labs.add("BO");
-                    labs.add("Ingenieria de Software");
-                    labs.add("Multimedia y Moviles");
-                    labs.add("Plataformas Computacionales");
-                    labs.add("Redes de Computadores");
-                    labs.add("Aula Inteligente");
+                    labs.add(new booString("BO"));
+                    labs.add(new booString("Ingenieria de Software"));
+                    labs.add(new booString("Multimedia y Moviles"));
+                    labs.add(new booString("Plataformas Computacionales"));
+                    labs.add(new booString("Redes de Computadores"));
+                    labs.add(new booString("Aula Inteligente"));
                     days.add(labs);
                 }else{
                     for (int j = 0; j < 6; j++){
@@ -368,18 +376,17 @@ public class ServicesFacade {
                 }
             }
             a.add(days);
-        } 
-        /**
+        } /**
+        System.out.println("------> "+semana);
         for (int k = 0; k < 8; k++){
-            for(int i = 0; i < 6; i++){
+            for(int i = 0; i < 8; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
-                    if(a.get(k).get(i).get(j)!= null){System.out.print(k+"  "+i+"  "+j);}
-                    System.out.print(a.get(k).get(i).get(j)+" ");
+                    System.out.print(a.get(k).get(i).get(j).toString());
                 }
                 System.out.println("");        
             }
             System.out.println("");
-        }  **/      
+        }**/
         return a;
     }
     
@@ -431,11 +438,11 @@ public class ServicesFacade {
         Profesor ans = null;
         try{
             DaoFactory df = DaoFactory.getInstance(properties);
-            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "1");
+            
             df.beginSession();
 
             DaoProfesor dpro = df.getDaoProfesor();
-            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, "2");
+
             ans = dpro.getProfesor(n);
 
             df.commitTransaction();
@@ -446,6 +453,7 @@ public class ServicesFacade {
         }
         return ans;
     }
+    
     public boolean reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores)  throws PersistenceException,SQLException{
         
         boolean boo=true;
@@ -462,16 +470,115 @@ public class ServicesFacade {
                 boo=false;
                 
             }
-            
-            
-            
         }
         df.commitTransaction();
         df.endSession();
-        
-        
         return boo;
         
-        
     }   
+
+    public ArrayList<ArrayList<ArrayList<booString>>> getDispFiltroSoftwareNumCompu(int numComputadores, Set<String> softs, int semana) throws PersistenceException {
+        Set<Reserva> ans = reservaEsperadar(semana);
+        int[][] matriz1 = new int[48][6];
+        for (Reserva r :ans){
+            lb = numLaboratorio(r.getLaboratorio().getNombreLab());
+            dia = r.getDia()-1;
+            for (int i : r.getBloques()){
+                if(matriz1[lb+((i-1)*6)][dia] + r.getNumcomputadores() + numComputadores <= r.getLaboratorio().getNumerocomputadores()){
+                    matriz1[lb+((i-1)*6)][dia] += r.getNumcomputadores();
+                }else{
+                    matriz1[lb+((i-1)*6)][dia] = Integer.MAX_VALUE;
+                }
+            }
+        }
+        Set<Laboratorio> lab = getAllLabs();
+        Laboratorio[] estosSon = new Laboratorio[6];
+        Arrays.fill(estosSon, null);
+
+        for (Laboratorio l: lab){
+            boolean boo = true;
+            lb = numLaboratorio(l.getNombreLab());
+            Set<Software> gSoft = l.getLabsoftware();
+            Set<String> nombres = new HashSet<>();
+            for (Software s: gSoft){
+                nombres.add(s.getNombre());
+            }
+            for (String s:softs){
+                boo &= nombres.contains(s);
+            }
+            if(boo){
+                estosSon[lb] = l;
+            }
+        }
+        for (int k = 0; k < 8; k++){
+            for(int i = 2; i < 8; i++){
+                for (int j = 0; j < 6; j++){
+                    if(matriz1[(k*6)+j][j] != Integer.MAX_VALUE && estosSon[j] != null){
+                        a.get(k).get(i).get(j).setDisponible(true);
+                    }
+                }
+            }
+        } 
+        return a;
+    }
+
+    public Set<Software> getAllSoftware() {
+        Set<Software> ans = null;
+        try{
+            DaoFactory df = DaoFactory.getInstance(properties);
+            
+            df.beginSession();
+
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+            ans = dpro.getAllSoftware();
+
+            df.commitTransaction();
+
+            df.endSession();
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans;
+    }
+    
+    public Software getSoftware(String nombre) {
+        Software ans = null;
+        try{
+            DaoFactory df = DaoFactory.getInstance(properties);
+            
+            df.beginSession();
+
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+            ans = dpro.getSoftware(nombre);
+
+            df.commitTransaction();
+
+            df.endSession();
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans;
+    }
+
+    public int getIndexReserva() {
+        int ans = 0;
+        try{
+            DaoFactory df = DaoFactory.getInstance(properties);
+            
+            df.beginSession();
+
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
+
+            ans = dpro.getIndexReserva();
+
+            df.commitTransaction();
+
+            df.endSession();
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans;
+    }
 }

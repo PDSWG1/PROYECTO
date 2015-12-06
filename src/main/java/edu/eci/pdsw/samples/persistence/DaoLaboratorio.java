@@ -9,7 +9,7 @@ import java.util.Set;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Reserva;
 import java.sql.SQLException;
-
+import edu.eci.pdsw.entities.Software;
 /**
  *
  * @author Cesar
@@ -23,8 +23,15 @@ public interface DaoLaboratorio {
     public void insertReserva(Reserva rv) throws PersistenceException;
 
     public Set<Reserva> reservaLabSemanDia(String laboratorio, int semana, int dia) throws PersistenceException;
-
-    public Set<Laboratorio> getAlllabs()  throws PersistenceException;
     
     public Integer[] reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores) throws PersistenceException,SQLException;
+
+    public Set<Laboratorio> getAlllabs() throws PersistenceException;
+
+    public Set<Software> getAllSoftware() throws PersistenceException;
+    
+    public Software getSoftware(String nombre) throws PersistenceException;
+
+    public int getIndexReserva() throws PersistenceException;
+
 }

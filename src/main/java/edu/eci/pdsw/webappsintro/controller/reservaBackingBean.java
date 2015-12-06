@@ -9,6 +9,8 @@ import edu.eci.pdsw.entities.Asignatura;
 import edu.eci.pdsw.entities.Laboratorio;
 import edu.eci.pdsw.entities.Profesor;
 import edu.eci.pdsw.entities.Reserva;
+import edu.eci.pdsw.entities.Software;
+import edu.eci.pdsw.entities.booString;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServicesFacade;
 import java.sql.Date;
@@ -24,12 +26,62 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanReserva")
 @SessionScoped
 public class reservaBackingBean {
-    private int semana = 1, semanaRespaldo= 0;
+    private int semana = 1;
     private Laboratorio laboratorio;
-    private ArrayList<ArrayList<ArrayList<String>>> horario;
     private Set<String> selectedBloques;
     private boolean repetir;
+    private boolean booFiltro = false;
     private int dia = 1;
+    private int numComputadores = 0;
+    private int numComputadoresReserva;
+    private int index;
+    private Set<String> softs;
+    private ArrayList<ArrayList<ArrayList<booString>>> horario;
+    private ArrayList<ArrayList<ArrayList<booString>>> horarioDisponible;
+    
+    public ArrayList<ArrayList<ArrayList<booString>>> getHorarioDisponible() {
+        return horarioDisponible;
+    }
+
+    public void setHorarioDisponible(ArrayList<ArrayList<ArrayList<booString>>> horarioDisponible) {
+        this.horarioDisponible = horarioDisponible;
+    }
+
+    public boolean isBooFiltro() {
+        return booFiltro;
+    }
+
+    public void setBooFiltro(boolean booFiltro) {
+        this.booFiltro = booFiltro;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+    
+    public int getNumComputadoresReserva() {
+        return numComputadoresReserva;
+    }
+
+    public void setNumComputadoresReserva(int numComputadoresReserva) {
+        this.numComputadoresReserva = numComputadoresReserva;
+    }
+    
+    public int getNumComputadores() {
+        return numComputadores;
+    }
+
+    public void setNumComputadores(int numComputadores) {
+        this.numComputadores = numComputadores;
+    }
+
+    public Set<String> getSofts() {
+        return softs;
+    }
+
+    public void setSofts(Set<String> softs) {
+        this.softs = softs;
+    }
 
     public int getDia() {
         return dia;
@@ -55,20 +107,13 @@ public class reservaBackingBean {
         this.selectedBloques = selectedBloques;
     }
             
-    public ArrayList<String> getBloques(){
+    public ArrayList<booString> getBloques(){
         return ServicesFacade.getInstance("applicationconfig.properties").getBloques();
     }
 
-    public ArrayList<ArrayList<ArrayList<String>>> getHorario() throws PersistenceException {
-        if (semana != semanaRespaldo){
-            horario = ServicesFacade.getInstance("applicationconfig.properties").mostrarInformacionTabla(semana);
-            semanaRespaldo = semana;
-        }
+    public ArrayList<ArrayList<ArrayList<booString>>> getHorario() throws PersistenceException {
+        this.horario = ServicesFacade.getInstance("applicationconfig.properties").mostrarInformacionTabla(semana);
         return horario;
-    }
-
-    public void setHorario(ArrayList<ArrayList<ArrayList<String>>> horario) {
-        this.horario = horario;
     }
 
     public Laboratorio getLaboratorio() {
@@ -80,7 +125,7 @@ public class reservaBackingBean {
     }
         
     public void setSemana(int semana) throws PersistenceException {
-        this.semana = (semana == 0)? 1: semana;
+        this.semana = semana;
     }
 
     public void setLaboratorio(Laboratorio laboratorio) {
@@ -93,17 +138,29 @@ public class reservaBackingBean {
     
     public void makeReserva() throws PersistenceException{
         //Prueba de que inserta en la base de datos
+        ServicesFacade sf = ServicesFacade.getInstance("applicationconfig.properties");
         Set<Integer> transformadorBloqueInteger = ServicesFacade.transformadorBloqueInteger(selectedBloques);
         java.util.Date now = new java.util.Date();
         Date fecha = new Date(now.getYear(), now.getMonth(), now.getDay());
-        Profesor pr = ServicesFacade.getInstance("applicationconfig.properties").getProfesor(2096121);
+        Profesor pr = sf.getProfesor(2096121);
         System.out.println("-----> "+pr.getCodigo());
         Asignatura as = new Asignatura("PDSW", "Programacion", 4);
-        Reserva rv = new Reserva(1, fecha, pr, laboratorio, semana, dia, transformadorBloqueInteger , as,1);
+        index = sf.getIndexReserva();
+        Reserva rv = new Reserva(sf.getIndexReserva(), fecha, pr, laboratorio, semana, dia, transformadorBloqueInteger , as, numComputadoresReserva);
         if(repetir){
-            ServicesFacade.getInstance("applicationconfig.properties").insertReservaReplay(rv);
+            sf.insertReservaReplay(rv);
         }else{
-            ServicesFacade.getInstance("applicationconfig.properties").insertReserva(rv);
+            sf.insertReserva(rv);
         }
+        booFiltro = false;
+    }
+    
+    public void makeFiltro() throws PersistenceException{
+        booFiltro = true;
+        this.horarioDisponible = ServicesFacade.getInstance("applicationconfig.properties").getDispFiltroSoftwareNumCompu(numComputadores, softs, semana);
+    }
+    
+    public Set<Software> getAllSoftwares(){
+        return ServicesFacade.getInstance("applicationconfig.properties").getAllSoftware();
     }
 }
