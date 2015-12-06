@@ -348,9 +348,9 @@ public class ServicesFacade {
             dia = r.getDia()-1;
             for (int i : r.getBloques()){
                 if (matriz[lb+((i-1)*6)][dia].getLista().get(0).equals("Disponible")){
-                    matriz[lb+((i-1)*6)][dia] = new booString(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #"+r.getNumcomputadores());
+                    matriz[lb+((i-1)*6)][dia] = new booString(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores());
                 }else{
-                    matriz[lb+((i-1)*6)][dia].setLista(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #"+r.getNumcomputadores());
+                    matriz[lb+((i-1)*6)][dia].setLista(r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores());
                 }
             }
         }
@@ -376,17 +376,7 @@ public class ServicesFacade {
                 }
             }
             a.add(days);
-        } /**
-        System.out.println("------> "+semana);
-        for (int k = 0; k < 8; k++){
-            for(int i = 0; i < 8; i++){
-                for (int j = 0; j < a.get(k).get(i).size(); j++){
-                    System.out.print(a.get(k).get(i).get(j).toString());
-                }
-                System.out.println("");        
-            }
-            System.out.println("");
-        }**/
+        }
         return a;
     }
     
@@ -454,7 +444,7 @@ public class ServicesFacade {
         return ans;
     }
     
-    public boolean reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores)  throws PersistenceException,SQLException{
+    public boolean reservaLabDisponible(Set<Integer> bloques, Laboratorio laboratorio, int semana, int dia, int numcomputadores)  throws PersistenceException,SQLException{
         
         boolean boo=true;
         DaoFactory df = DaoFactory.getInstance(properties);
@@ -581,4 +571,50 @@ public class ServicesFacade {
         }
         return ans;
     }
+    
+    // hacer un funcion que traiga el horario semana y laboratorio
+    public String[][] getReservasSemanaYLaboratorio(int semana, String laboratorio) throws PersistenceException{
+        String[][] ans1 = new String[8][6];
+        try{
+            Set<Reserva> ans;
+            DaoFactory df = DaoFactory.getInstance(properties);
+            
+            df.beginSession();
+
+            DaoLaboratorio dpro = df.getDaoLaboratorio();
+            
+            for (String[] s : ans1){
+                Arrays.fill(s, "Disponible");
+            }
+            
+            for (int dia = 1; dia < 7; dia++){
+                ans = dpro.reservaLabSemanDia(laboratorio, semana, dia);
+                for (Reserva r :ans){
+                    for (int i : r.getBloques()){
+                        if(ans1[i][dia-1].equals("Disponible")){
+                            ans1[i][dia-1] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores()+" ";
+                        }else{
+                            ans1[i][dia-1] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+" #CR "+r.getNumcomputadores()+" ";
+                        }
+                    }
+                }
+            }
+
+            df.commitTransaction();
+
+            df.endSession();
+            
+        }catch (PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans1;
+    }
+   
+    // mostrar disponibles
+    
+    // mostrar cuantos computadores hay disponible
+    
+    //mas pruebas a al filtro
+    
+    
 }

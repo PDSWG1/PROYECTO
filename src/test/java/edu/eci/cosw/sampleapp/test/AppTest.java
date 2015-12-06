@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;                   
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -199,8 +200,8 @@ public class AppTest {
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
                 + "VALUES ('Plataformas', 30, 'Nicolas Gomez')");
         
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores )"
-                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724,2)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo, numcomputadores )"
+                + "VALUES (1, NOW(), 1, 3, 'PDSW', 'Plataformas', 2096724, 30)");
         
         stmt.execute("INSERT INTO BLOQUES (reservas_id, numero)"
                 + "VALUES (1, 1)");
@@ -294,9 +295,9 @@ public class AppTest {
         
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
-        System.out.println("entrando a reserva");
+        
         sf.insertReserva(rv);
-        System.out.println("saliendo de reservas");
+        
         Set<Reserva> ans = sf.reservaEsperadar(1);
         
         Assert.assertTrue("Fallo la prueba si ingreso la reserva", ans.isEmpty());
@@ -374,11 +375,11 @@ public class AppTest {
         
         Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
         Statement stmt = conn.createStatement();
-        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores)"
-                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de software', 2096139,1)");
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo, numcomputadores)"
+                + "VALUES (20, NOW(), 2, 4, 'PIMO', 'Ingenieria de software', 2096139, 24)");
         
         stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
-                + "VALUES ('Ingenieria de software', 20, 'Nicolas Gomez')");
+                + "VALUES ('Ingenieria de software', 24, 'Nicolas Gomez')");
         
         stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
                 + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
@@ -414,8 +415,8 @@ public class AppTest {
         Set<Integer> reservas = new LinkedHashSet();
         reservas.add(1);
         reservas.add(2);
-        int numcomputadores=1;
-        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi,numcomputadores);
+        int numcomputadores = 4;
+        Reserva rv = new Reserva(21, fc, pr, lb, 1, 4, reservas, asi, numcomputadores);
         
         ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
 
@@ -529,12 +530,12 @@ public class AppTest {
 
         ArrayList<ArrayList<ArrayList<booString>>> ans = sf.mostrarInformacionTabla(2);
  
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(1).toString().equals("PIMO CARO "));
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(2).toString().equals("PIMO CARO "));
-        Assert.assertTrue("No coinciden los datos",ans.get(1).get(5).get(3).toString().equals("PIMO CARO "));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(1).toString().equals("PIMO CARO "));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(2).toString().equals("PIMO CARO "));
-        Assert.assertTrue("No coinciden los datos",ans.get(2).get(5).get(3).toString().equals("PIMO CARO ")); 
+        Assert.assertTrue("No coinciden los datos1",ans.get(1).get(5).get(1).toString().equals("PIMO CARO #CR 1"));
+        Assert.assertTrue("No coinciden los datos2",ans.get(1).get(5).get(2).toString().equals("PIMO CARO #CR 1"));
+        Assert.assertTrue("No coinciden los datos3",ans.get(1).get(5).get(3).toString().equals("PIMO CARO #CR 1"));
+        Assert.assertTrue("No coinciden los datos4",ans.get(2).get(5).get(1).toString().equals("PIMO CARO #CR 1"));
+        Assert.assertTrue("No coinciden los datos5",ans.get(2).get(5).get(2).toString().equals("PIMO CARO #CR 1"));
+        Assert.assertTrue("No coinciden los datos6",ans.get(2).get(5).get(3).toString().equals("PIMO CARO #CR 1")); 
         
     }
 
@@ -730,15 +731,19 @@ public class AppTest {
 
         sf.mostrarInformacionTabla(semana);
         ArrayList<ArrayList<ArrayList<booString>>> a = sf.getDispFiltroSoftwareNumCompu(numComputadores, softs, semana);
+        
         boolean boo = true;
         for (int k = 0; k < 8; k++){
             for(int i = 0; i < 6; i++){
                 for (int j = 0; j < a.get(k).get(i).size(); j++){
+                    System.out.print(a.get(k).get(i).get(j).toString()+" ");
                     if( j == 0 && !a.get(k).get(i).get(j).isDisponible()){
                         boo = false;
                     }
-                }     
+                }    
+                System.out.println("");
             }
+            System.out.println("");
         } 
         Assert.assertTrue("No coinciden los valores", boo);
     }
@@ -816,4 +821,102 @@ public class AppTest {
         
         Assert.assertTrue("No coinciden los valores", soft.getNombre().equals("NetBeans"));
     } 
+    
+    @Test
+    public void mostrarReservasSemanaYLaboratorio() throws SQLException, PersistenceException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo, numcomputadores) "
+            + "VALUES (22, NOW(), 2, 4, 'PIMO', 'Multimedia y Moviles', 2096139, 1)");
+        
+        stmt.execute("INSERT INTO LABORATORIOS (nombre, numComputadores, encargado) "
+                + "VALUES ('Multimedia y Moviles', 7, 'Nicolas Gomez')");
+
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Unity', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Python', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('NetBeans', '5', '5.6', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO SOFTWARES (nombre, licencia, version, urlDown) "
+                + "VALUES ('Eclipse', '3', '3.4', 'http://unity3d.com/es/get-unity/download')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Multimedia y Moviles', 'Unity')");
+        
+        stmt.execute("INSERT INTO LABSOFT (laboratorio_nombre, softwares_nombre) "
+                + "VALUES ('Multimedia y Moviles', 'Python')");
+
+        stmt.execute("INSERT INTO ASIGNATURAS (mnemonico, nombre, creditos) "
+                + "VALUES ('PIMO', 'Programacion imperativa modular', 4)");
+
+        stmt.execute("INSERT INTO PROFESORES (codigo, nombre, codigoNombre, email, telefono, cedula) "
+                + "VALUES (2096139, 'Camilo Rocha', 'CARO', 'camilo.rocha@escuelaing.edu.co', 3134723033, 1013628836)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (22, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (22, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (23, NOW(), 2, 1, 'PIMO', 'Multimedia y Moviles', 2096139, 1)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 1)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (23, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (24, NOW(), 2, 1, 'PIMO', 'Multimedia y Moviles', 2096139, 3)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (24, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (24, 3)");
+
+        stmt.execute("INSERT INTO RESERVAS (id, fechaRadicado, semana, dia, asignatura, laboratorio_nombre, profesores_codigo,numcomputadores) "
+            + "VALUES (25, NOW(), 2, 3, 'PIMO', 'Multimedia y Moviles', 2096139, 7)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 2)");
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 3)");        
+
+        stmt.execute("INSERT INTO BLOQUES (reservas_id, numero) "
+            + "VALUES (25, 4)");
+
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        //retornar laboratorios y horas
+        
+        String[][] ans1 = new String[][]{
+            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"PIMO CARO #CR 1 " , "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"PIMO CARO #CR 1 PIMO CARO #CR 3 " , "Disponible", "PIMO CARO #CR 7 " , "PIMO CARO #CR 1 " , "Disponible", "Disponible"},
+            {"PIMO CARO #CR 1 PIMO CARO #CR 3 " , "Disponible", "PIMO CARO #CR 7 " , "PIMO CARO #CR 1 " , "Disponible", "Disponible"},
+            {"Disponible", "Disponible", "PIMO CARO #CR 7 " , "Disponible", "Disponible", "Disponible"},
+            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"}};
+        
+        String[][] ans = sf.getReservasSemanaYLaboratorio(2, "Multimedia y Moviles");
+        boolean boo = true;
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 6; j++){
+                boo &= ans[i][j].equals(ans1[i][j]);
+            }
+        }
+        Assert.assertTrue("No coinciden los valores", boo);
+    }
 } 
