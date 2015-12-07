@@ -5,13 +5,8 @@
  */
 package edu.eci.pdsw.webappsintro.controller;
 
-import edu.eci.pdsw.entities.Laboratorio;
-import edu.eci.pdsw.entities.booString;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import edu.eci.pdsw.services.ServicesFacade;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -23,11 +18,9 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanHorario")
 @SessionScoped
 public class horarioBackingBean {
-    private int semana = 1, semanaRespaldo= 0;;
-    private List<Laboratorio> labs;
-    private Laboratorio laboratorio;
+    private int semana = 0, semanaRespaldo= 10;
     private String nomLabs;
-    private ArrayList<ArrayList<ArrayList<booString>>> horario;
+    private String[][] horario;
     
     
     /*Getter del número de la semana universitaria
@@ -42,6 +35,7 @@ public class horarioBackingBean {
      */
     public void setSemana(int sem){
         this.semana = sem;
+
     }
     
     /*Getter del número de la semana universitaria
@@ -57,30 +51,17 @@ public class horarioBackingBean {
     public void setNombre(String nombLab){
         this.nomLabs = nombLab;
     }
-    
-    /*Setter del nombre de laboratorio que desea consultar
-     * @param elección del laboratorio que desea consultar
-     */
-    
-    public void setLaboratorio(Laboratorio laboratorio) {
-        this.laboratorio = laboratorio;
-    }
-    
-    public ArrayList<ArrayList<ArrayList<booString>>> getHorario() throws PersistenceException {
-        if (semana != semanaRespaldo){
-            horario = ServicesFacade.getInstance("applicationconfig.properties").mostrarInformacionTabla(semana);
-            semanaRespaldo = semana;
+        
+    public String[][] getHorario() throws PersistenceException {
+        if (semana != semanaRespaldo){  
+            horario = ServicesFacade.getInstance("applicationconfig.properties").getReservasSemanaYLaboratorio(semana, nomLabs);
+            semanaRespaldo = semana; 
         }
         return horario;
     }
     
-    public void setHorario(ArrayList<ArrayList<ArrayList<booString>>> horario) {
+    public void setHorario(String[][] horario) {
         this.horario = horario;
     }
-
-    
-    public Set<Laboratorio> getLaboratorios() throws PersistenceException {
-        return ServicesFacade.getInstance("applicationconfig.properties").getAllLabs();
-    }
-    
+       
 }
