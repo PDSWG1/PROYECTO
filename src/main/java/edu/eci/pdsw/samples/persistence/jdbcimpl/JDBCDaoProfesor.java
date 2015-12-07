@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import edu.eci.pdsw.entities.Profesor;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,6 +81,25 @@ public class JDBCDaoProfesor implements DaoProfesor{
         }catch(SQLException ex){
             throw new PersistenceException("An error ocurred while loading all laboratories.",ex);
         }
+    }
+
+    @Override
+    public String getPassword(String username) throws SQLException, PersistenceException{
+        String ans = null;
+        try{
+            PreparedStatement ps;
+            ps = con.prepareStatement("SELECT password "
+                + "FROM user "
+                + "WHERE user_id = ?");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                ans = rs.getString(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCDaoProfesor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans;
     }
         
 }

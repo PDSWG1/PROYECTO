@@ -29,19 +29,33 @@ and open the template in the editor.
                     
                     <p:separator />
                                         
-                    <h:outputLabel for="usern" value="Usuario: " />
-                    <p:inputText id="usern" required="true" value="#{beanLogin.user}"/>
-                    <p:message for="usern" display="text" />
+                    <h:outputLabel for="user" value="Usuario: " />
+                    <p:inputText id="user" value="#{beanLogin.user}"/>
 
                     <br></br>
 
-                    <h:outputLabel value="Contraseña: " />
-                    <p:password required="true" value="#{beanLogin.password1}" match="#{beanLogin.password1}" />
+                    <h:outputLabel for="passsword" value="Contraseña: " />
+                    <p:inputText id="passsword" value="#{beanLogin.password}"/>
                 
                     <p:separator />
                 
-                    <p:commandButton value="Confirmar" action="reservar" styleClass="ui-priority-primary" />
+                    <p:commandButton value="Confirmar" actionListener="#{beanLogin.confirm}" oncomplete="PF('war').show()" styleClass="ui-priority-primary" update="login"/>
             </p:layoutUnit>
+                            
+            <p:dialog header="Informacion" widgetVar="war" modal="true" showEffect="fade" hideEffect="fade" resizable="true" width = "800">
+                <p:outputPanel style="text-align:center; " >
+                    <p:column rendered="#{beanLogin.confir}">
+                        <h:outputText value = "Bienvenido" />
+                        <br></br>
+                        <p:commandButton value="Aceptar" action="reservar.xhtml" icon="ui-icon-check" />
+                    </p:column>
+                    <p:column rendered="#{!beanLogin.confir}">
+                        <h:outputText value = "Usuario no valido" />
+                        <br></br>
+                        <p:commandButton value="Aceptar" oncomplete="PF('war').hide()" icon="ui-icon-check" />
+                    </p:column>
+                </p:outputPanel>
+            </p:dialog>
         </p:layout>
       </h:form>
     </h:body>

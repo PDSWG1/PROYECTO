@@ -5,6 +5,8 @@
  */
 package edu.eci.pdsw.webappsintro.controller;
 
+import edu.eci.pdsw.services.ServicesFacade;
+import java.sql.SQLException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -18,21 +20,35 @@ import javax.faces.bean.SessionScoped;
 public class loginBackingBean {
     private String password; 
     private String username; 
+    private boolean confir;
+
+    public boolean isConfir() {
+        return confir;
+    }
+
+    public void setConfir(boolean confir) {
+        this.confir = confir;
+    }
     
-    public String getPassword1() {
+    public String getPassword() {
         return password;
     }
  
-    public void setPassword1(String password1) {
-        this.password = password1;
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public String getUser() {
         return username;
     }
  
-    public void setUser(String usern) {
-        this.username = usern;
+    public void setUser(String user) {
+        this.username = user;
     }
     
+    public void confirm() throws SQLException{
+        ServicesFacade sf = ServicesFacade.getInstance("applicationconfig.properties");
+        String passwordDB = sf.getPassword(username);
+        confir = password.equals(passwordDB);
+    }
 }

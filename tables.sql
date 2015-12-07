@@ -79,3 +79,35 @@ CREATE TABLE IF NOT EXISTS `SOLICITUDES`(
 	`laboratorio_nombre` VARCHAR(200)  NOT NULL,
 	PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+-- Tables Seguridad
+CREATE TABLE IF NOT EXISTS `user`(
+	`password` VARCHAR(200) NOT NULL,
+	`name` VARCHAR(200) NOT NULL,
+	`user_id` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`user_id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `userroles`(
+	`userid` VARCHAR(200) NOT NULL,
+	`roleid` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`userid`,`roleid`))
+ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `role`(
+	`role_id` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`role_id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `permission`(
+	`permission` VARCHAR(200) NOT NULL,
+	`permission_id` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`permission_id`))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `rolepermissions`(
+	`roleid` VARCHAR(200) NOT NULL,
+	`permissionid` VARCHAR(200) NOT NULL,
+	PRIMARY KEY (`roleid`,`permissionid`))
+ENGINE = InnoDB;

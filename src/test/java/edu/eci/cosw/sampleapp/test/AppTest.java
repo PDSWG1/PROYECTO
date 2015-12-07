@@ -915,4 +915,78 @@ public class AppTest {
         }
         Assert.assertTrue("No coinciden los valores", boo);
     }
+    
+    @Test
+    public void UsuarioPassValido() throws SQLException{
+        clearDB();
+        Connection conn = DriverManager.getConnection("jdbc:h2:file:./target/db/testdb;MODE=MYSQL", "sa", "");
+        Statement stmt = conn.createStatement();
+        
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('2096121', 'Hector Fabio Cadavid Rodriguez' , '2096121')");
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('2096122', 'Camilo Andres Rocha Diaz' , '2096122')");
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('2096123', 'Maria Clara Irma Fernandez' , '2096123')");
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('2096124', 'Ruben Cesar Dario Vladez' , '2096124')");
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('2096125', 'Olga Lucia Godoy Morales' , '2096125')");	
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('1013622878', 'admin' , '1013622878')");	
+        stmt.execute("INSERT INTO user(user_id, name, password) "+
+                "VALUES ('91043054002', 'guest' , '91043054002')");	
+
+        stmt.execute("INSERT INTO role(role_id) "+
+                "VALUES ('admin')");	
+        stmt.execute("INSERT INTO role(role_id) "+
+                "VALUES ('employee')");
+        stmt.execute("INSERT INTO role(role_id) "+
+                "VALUES ('guest')");	
+
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('2096121','employee')");
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('2096122','employee')");	
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('2096123','employee')");	
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('2096124','employee')");	
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('2096125','employee')");	
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('1013622878','admin')");	
+        stmt.execute("INSERT INTO userroles(userid, roleid) "+
+                "VALUES ('91043054002','guest')");	
+        
+        
+        ServicesFacade sf = ServicesFacade.getInstance("h2-applicationconfig.properties");
+        
+        String password;
+        
+        password = sf.getPassword("2096121");
+        Assert.assertTrue("No coinciden los valores", password.equals("2096121"));
+        
+        password = sf.getPassword("2096122");
+        Assert.assertTrue("No coinciden los valores", password.equals("2096122"));
+        
+        password = sf.getPassword("2096123");
+        Assert.assertTrue("No coinciden los valores", password.equals("2096123"));
+        
+        password = sf.getPassword("2096124");
+        Assert.assertTrue("No coinciden los valores", password.equals("2096124"));
+        
+        password = sf.getPassword("2096125");
+        Assert.assertTrue("No coinciden los valores", password.equals("2096125"));
+        
+        password = sf.getPassword("1013622878");
+        Assert.assertTrue("No coinciden los valores", password.equals("1013622878"));
+        
+        password = sf.getPassword("91043054002");
+        Assert.assertTrue("No coinciden los valores", password.equals("91043054002"));
+        
+        password = sf.getPassword("123");
+        Assert.assertTrue("No coinciden los valores", password == null);
+        
+    }
 } 

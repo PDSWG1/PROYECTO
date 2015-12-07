@@ -15,4 +15,6 @@ import edu.eci.pdsw.entities.Profesor;
 public interface DaoProfesor {
     
     public Profesor getProfesor(int n) throws SQLException, PersistenceException;
+
+    public String getPassword(String username) throws SQLException, PersistenceException;
 }

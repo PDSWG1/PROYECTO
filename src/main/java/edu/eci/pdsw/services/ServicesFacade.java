@@ -624,6 +624,27 @@ public class ServicesFacade {
     // mostrar cuantos computadores hay disponible
     
     //mas pruebas a al filtro
+
+    public String getPassword(String username) throws SQLException {
+        String ans = null;
+        try{
+            DaoFactory df = DaoFactory.getInstance(properties);
+            
+            df.beginSession();
+
+            DaoProfesor dpro = df.getDaoProfesor();
+            
+            ans = dpro.getPassword(username);
+
+            df.commitTransaction();
+
+            df.endSession();
+            
+        }catch (PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ans;
+    }
     
     
 }
