@@ -182,4 +182,5 @@ public class reservaBackingBean {
     public Set<Software> getAllSoftwares(){
         return ServicesFacade.getInstance("applicationconfig.properties").getAllSoftware();
     }
+
 }
