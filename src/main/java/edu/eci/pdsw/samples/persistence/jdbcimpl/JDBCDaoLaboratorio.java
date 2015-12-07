@@ -148,7 +148,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                      */
                     asi = new Asignatura(rs1.getString(1), rs1.getString(2), rs1.getInt(3));
                 }
-
+                
                 //creación de la reserva
                 rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi, rs.getInt(15));
                 ans.add(rv);
@@ -255,7 +255,7 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
             //Consulta de las reservas que existen en la semana ingresada como parámetro 
             ps = con.prepareStatement("SELECT rv.id, rv.fechaRadicado, rv.dia, rv.semana, rv.asignatura, "
                     + "rv.laboratorio_nombre, rv.profesores_codigo, pr.nombre, pr.codigoNombre, pr.email, "
-                    + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado,rv.numcomputadores "
+                    + "pr.telefono, pr.cedula, lb.numComputadores, lb.encargado, rv.numcomputadores "
                     + "FROM RESERVAS AS rv, PROFESORES AS pr, LABORATORIOS AS lb "
                     + "WHERE rv.laboratorio_nombre = lb.nombre AND rv.profesores_codigo = pr.codigo "
                     + "AND rv.semana = ? AND rv.laboratorio_nombre = ? AND rv.dia = ?");
@@ -353,9 +353,9 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
                      */
                     asi = new Asignatura(rs1.getString(1), rs1.getString(2), rs1.getInt(3));
                 }
-
+                System.out.println(rs.getInt(15));
                 //creación de la reserva
-                rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi,rs.getInt(15));
+                rv = new Reserva(pint(rs.getString(1)), rs.getDate(2), pr, lb, semana, rs.getInt(3), blo, asi, rs.getInt(15));
                 ans.add(rv);
             }
             return ans;

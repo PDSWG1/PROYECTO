@@ -897,15 +897,15 @@ public class AppTest {
         //retornar laboratorios y horas
         
         String[][] ans1 = new String[][]{
-            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"PIMO CARO; " , "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
-            {"PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
-            {"Disponible", "Disponible", "PIMO CARO; " , "Disponible", "Disponible", "Disponible"},
-            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
-            {"Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"}};
-        
+            {"7:00am-8:30am","Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"8:30am-10:00am","PIMO CARO; " , "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"10:00am-11:30pm","PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
+            {"11:30pm-1:00pm","PIMO CARO; PIMO CARO; " , "Disponible", "PIMO CARO; " , "PIMO CARO; " , "Disponible", "Disponible"},
+            {"1:00pm-2:30pm","Disponible", "Disponible", "PIMO CARO; " , "Disponible", "Disponible", "Disponible"},
+            {"2:30pm-4:00pm","Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"4:00pm-5:30pm","Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"},
+            {"5:30pm-7:00pm","Disponible", "Disponible", "Disponible", "Disponible", "Disponible", "Disponible"}};
+
         String[][] ans = sf.getReservasSemanaYLaboratorio(2, "Multimedia y Moviles");
         boolean boo = true;
         for (int i = 0; i < 8; i++){

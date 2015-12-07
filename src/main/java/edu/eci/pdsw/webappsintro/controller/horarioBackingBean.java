@@ -18,8 +18,8 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name = "beanHorario")
 @SessionScoped
 public class horarioBackingBean {
-    private int semana = 0, semanaRespaldo= 10;
-    private String nomLabs;
+    private int semana = 1;
+    private String nomLabs = "B0";
     private String[][] horario;
     
     
@@ -56,11 +56,7 @@ public class horarioBackingBean {
      * @return número de la semana universitaria
      */        
     public String[][] getHorario() throws PersistenceException {
-        if (semana != semanaRespaldo){  
-            horario = ServicesFacade.getInstance("applicationconfig.properties").getReservasSemanaYLaboratorio(semana, nomLabs);
-            semanaRespaldo = semana; 
-        }
-        return horario;
+        return ServicesFacade.getInstance("applicationconfig.properties").getReservasSemanaYLaboratorio(semana, nomLabs);
     }
     
     /*Setter del horario bajo semana y laboratorio

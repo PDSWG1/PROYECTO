@@ -595,8 +595,6 @@ public class ServicesFacade {
         String[][] ans1 = new String[8][7];
         try{
             Set<Reserva> ans;
-            DaoFactory df = DaoFactory.getInstance(properties);
-            
             String[] nombres = new String[8];
             for (int i = 1; i < 9; i++){
                 nombres[i-1] = transformadorBloqueString(i).get(0).lista.get(0);
@@ -606,27 +604,32 @@ public class ServicesFacade {
                 Arrays.fill(ans1[w], "Disponible");
                 ans1[w][0] = nombres[w];
             }
+            DaoFactory df = DaoFactory.getInstance(properties);
             
             df.beginSession();
 
             DaoLaboratorio dpro = df.getDaoLaboratorio();
-            
+
             for (int dia = 1; dia < 8; dia++){
                 ans = dpro.reservaLabSemanDia(laboratorio, semana, dia);
                 for (Reserva r :ans){
                     for (int i : r.getBloques()){
-                        if(ans1[i][dia-1].equals("Disponible")){
-                            ans1[i][dia-1] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
+                        if(ans1[i][dia].equals("Disponible")){
+                            ans1[i][dia] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }else{
-                            ans1[i][dia-1] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
+                            ans1[i][dia] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }
                     }
                 }
             }
+            
+            df.commitTransaction();
+
+            df.endSession();  
         } catch(PersistenceException ex) {
             Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+
         return ans1;
     }
 

@@ -19,7 +19,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class loginBackingBean {
     private String password; 
-    private String username; 
+    public static String username; 
     private boolean confir;
 
     public boolean isConfir() {

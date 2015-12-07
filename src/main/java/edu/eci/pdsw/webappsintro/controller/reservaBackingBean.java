@@ -50,7 +50,7 @@ public class reservaBackingBean {
     }
 
     public Set<Asignatura> getAsignaturas() throws PersistenceException {
-        asignaturas = ServicesFacade.getInstance("applicationconfig.properties").getProfesor(2096121).getAsignatura();
+        asignaturas = ServicesFacade.getInstance("applicationconfig.properties").getProfesor(Integer.parseInt(loginBackingBean.username)).getAsignatura();
         return asignaturas;
     }
     
@@ -157,7 +157,7 @@ public class reservaBackingBean {
         Set<Integer> transformadorBloqueInteger = ServicesFacade.transformadorBloqueInteger(selectedBloques);
         java.util.Date now = new java.util.Date();
         Date fecha = new Date(now.getYear(), now.getMonth(), now.getDay());
-        Profesor pr = sf.getProfesor(2096121);
+        Profesor pr = sf.getProfesor(Integer.parseInt(loginBackingBean.username));
         index = sf.getIndexReserva();
         Asignatura asiss = null;
         for (Asignatura a : asignaturas){
