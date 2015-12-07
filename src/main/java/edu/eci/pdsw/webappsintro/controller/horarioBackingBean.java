@@ -51,7 +51,10 @@ public class horarioBackingBean {
     public void setNombre(String nombLab){
         this.nomLabs = nombLab;
     }
-        
+    
+    /*Getter del horario bajo semana y laboratorio
+     * @return número de la semana universitaria
+     */        
     public String[][] getHorario() throws PersistenceException {
         if (semana != semanaRespaldo){  
             horario = ServicesFacade.getInstance("applicationconfig.properties").getReservasSemanaYLaboratorio(semana, nomLabs);
@@ -60,6 +63,9 @@ public class horarioBackingBean {
         return horario;
     }
     
+    /*Setter del horario bajo semana y laboratorio
+     * @param número de la semana universitaria a buscar
+     */
     public void setHorario(String[][] horario) {
         this.horario = horario;
     }

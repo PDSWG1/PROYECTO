@@ -30,20 +30,34 @@ public class loginBackingBean {
         this.confir = confir;
     }
     
+    /*Getter de la constraseña del profesor
+     * @return string de contraseña
+     */
     public String getPassword() {
         return password;
     }
- 
+    
+    /*Setter de la constraseña del profesor
+     * 
+     */
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+   
+    /*Getter del usuario del profesor
+     * @return usuario del profesor
+     */
     public String getUser() {
         return username;
     }
  
-    public void setUser(String user) {
-        this.username = user;
+    /*Setter del usuario del profesor
+     * @return usuario del profesor
+     */
+    public void setUser(String usern) {
+        this.username = usern;
+
     }
     
     public void confirm() throws SQLException{
