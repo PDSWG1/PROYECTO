@@ -451,6 +451,17 @@ public class ServicesFacade {
         return ans;
     }
     
+    /**
+     * verifica que la reserva tenga un numero de computadores valido
+     * @param bloques de la Reserva
+     * @param laboratorio de la Reserva
+     * @param semana de la Reserva
+     * @param dia de la Reserva
+     * @param numcomputadores de la Reserva
+     * @return boolean boo false si la cantidad de computadores excede el limite true si la cantidad de computadores de la reserva es valida
+     * @throws edu.eci.pdsw.samples.persistence.PersistenceException
+     * @throws java.sql.SQLException
+     */ 
     public boolean reservaLabDisponible(Set<Integer> bloques, Laboratorio laboratorio, int semana, int dia, int numcomputadores)  throws PersistenceException,SQLException{
         
         boolean boo=true;

@@ -413,6 +413,16 @@ public class JDBCDaoLaboratorio implements DaoLaboratorio{
         }
         
     }
+    /**
+     * @param bloques de la Reserva
+     * @param laboratorio de la Reserva
+     * @param semana de la Reserva
+     * @param dia de la Reserva
+     * @param numcomputadores de la Reserva
+     * @return ans
+     * @throws PersistenceException
+     * @throws java.sql.SQLException
+     */
     @Override
     public Integer[] reservaLabDisponible(Set<Integer> bloques,Laboratorio laboratorio,int semana,int dia,int numcomputadores)  throws PersistenceException, SQLException{ 
        
