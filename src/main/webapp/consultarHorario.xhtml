@@ -23,9 +23,9 @@ and open the template in the editor.
 
             <p:layout style="min-width:800px;min-height:720px;">
             <!-- Semana a buscar -->
-            <p:layoutUnit position="north" resizable = "false" size="250" minSize="80" maxSize="500" style=" text-align: center;  background: mediumseagreen">
+            <p:layoutUnit position="north" resizable = "false" size="250" minSize="80" maxSize="500" style="background: mediumseagreen">
                 
-                <h:panelGrid columns="2" style="margin-bottom:10px; text-align: center" cellpadding="5">
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                         <p:outputLabel for="semana" value="Semanas universitarias:" />
                         <p:selectOneMenu id="semana" value="#{beanHorario.semana}" style="width:170px">
                             <f:selectItem itemLabel="Seleccione una: " itemValue="" />
@@ -63,12 +63,16 @@ and open the template in the editor.
                         <f:selectItem itemLabel="Redes de Computadores" itemValue="Redes de Computadores" />
                         <f:selectItem itemLabel="Multimedia y Móviles" itemValue="Multimedia y Móviles" />
                         <f:selectItem itemLabel="Aula Inteligente" itemValue="Aula Inteligente" />
+                        <f:selectItem itemLabel="Sala B0" itemValue="B0" />
                     </p:selectOneButton>
                     </h:panelGrid>  
                     
+                    <h:outputText value="#{beanHorario.nombre}" />
+                    <h:outputText value="#{beanHorario.semana}" />
+                                        
                     <p:commandButton value="Confirmar" update="consultaH" styleClass="ui-priority-primary" />
                     
-                    <p:commandButton value="Volver" action="principal" styleClass="ui-priority-primary" />
+                    <p:commandButton value="Volver" action="principal" styleClass="ui-priority-primary"/>
                     
                 </p:layoutUnit>
                 <!--Tabla con reservas con información-->
@@ -76,29 +80,25 @@ and open the template in the editor.
                     <p:column headerText="Bloques">
                         <p:dataTable id="bloques" var="labs" value="#{beanHorario.horario}">
                             <p:column headerText="Bloques" style="width:100px;height:20px;">
-                                <p:dataTable id="Bloques" var="labs2" value="#{labs.get(0)}">
-                                    <p:column>
-                                        <h:outputText value="#{labs2}" />
-                                    </p:column>
-                                </p:dataTable>
+                                <h:outputText value="#{labs[0]}" />
                             </p:column>
                             <p:column headerText="Lunes" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{beanHorario.semana}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                             <p:column headerText="Martes" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{beanHorario.nombre}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                             <p:column headerText="Miercoles" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                             <p:column headerText="Jueves" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                             <p:column headerText="Viernes" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                             <p:column headerText="Sabado" style="width:100px;height:20px;text-align: center;">
-                                <h:outputText value="#{labs2}" />
+                                        <h:outputText value="#{labs[1]}" />
                             </p:column>
                         </p:dataTable>
                     </p:column>

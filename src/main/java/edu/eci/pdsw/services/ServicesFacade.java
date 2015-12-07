@@ -16,12 +16,10 @@ import edu.eci.pdsw.samples.persistence.DaoProfesor;
 import edu.eci.pdsw.samples.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.reflect.Array.set;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -583,20 +581,26 @@ public class ServicesFacade {
     
     // hacer un funcion que traiga el horario semana y laboratorio
     public String[][] getReservasSemanaYLaboratorio(int semana, String laboratorio) throws PersistenceException{
-        String[][] ans1 = new String[8][6];
+        String[][] ans1 = new String[8][7];
         try{
             Set<Reserva> ans;
             DaoFactory df = DaoFactory.getInstance(properties);
+            
+            String[] nombres = new String[8];
+            for (int i = 1; i < 9; i++){
+                nombres[i-1] = transformadorBloqueString(i).get(0).lista.get(0);
+            }
+ 
+            for (int w = 0; w < 8; w++){
+                Arrays.fill(ans1[w], "Disponible");
+                ans1[w][0] = nombres[w];
+            }
             
             df.beginSession();
 
             DaoLaboratorio dpro = df.getDaoLaboratorio();
             
-            for (String[] s : ans1){
-                Arrays.fill(s, "Disponible");
-            }
-            
-            for (int dia = 1; dia < 7; dia++){
+            for (int dia = 1; dia < 8; dia++){
                 ans = dpro.reservaLabSemanDia(laboratorio, semana, dia);
                 for (Reserva r :ans){
                     for (int i : r.getBloques()){
@@ -604,26 +608,27 @@ public class ServicesFacade {
                             ans1[i][dia-1] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }else{
                             ans1[i][dia-1] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
+                        if(ans1[i][dia].equals("Disponible")){
+                            ans1[i][dia] = r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
+                        }else{
+                            ans1[i][dia] += r.getAsignatura().getId()+" "+r.getProfesor().getCodigoNombre()+"; ";
                         }
                     }
                 }
             }
-
-            df.commitTransaction();
-
-            df.endSession();
-            
-        }catch (PersistenceException ex) {
-            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ans1;
-    }
    
     // mostrar disponibles
     
     // mostrar cuantos computadores hay disponible
     
-    //mas pruebas a al filtro
+    //mas pruebas a al filtro           
     
-    
+        }
+        }
+        catch(PersistenceException ex) {
+            Logger.getLogger(ServicesFacade.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        return ans1;
+    }
 }
