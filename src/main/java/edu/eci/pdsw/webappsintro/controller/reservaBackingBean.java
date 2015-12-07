@@ -38,6 +38,21 @@ public class reservaBackingBean {
     private Set<String> softs;
     private ArrayList<ArrayList<ArrayList<booString>>> horario;
     private ArrayList<ArrayList<ArrayList<booString>>> horarioDisponible;
+    private String asis;
+    private Set<Asignatura> asignaturas;
+
+    public String getAsis() {
+        return asis;
+    }
+
+    public void setAsis(String asis) {
+        this.asis = asis;
+    }
+
+    public Set<Asignatura> getAsignaturas() throws PersistenceException {
+        asignaturas = ServicesFacade.getInstance("applicationconfig.properties").getProfesor(2096121).getAsignatura();
+        return asignaturas;
+    }
     
     public ArrayList<ArrayList<ArrayList<booString>>> getHorarioDisponible() {
         return horarioDisponible;
@@ -143,10 +158,14 @@ public class reservaBackingBean {
         java.util.Date now = new java.util.Date();
         Date fecha = new Date(now.getYear(), now.getMonth(), now.getDay());
         Profesor pr = sf.getProfesor(2096121);
-        System.out.println("-----> "+pr.getCodigo());
-        Asignatura as = new Asignatura("PDSW", "Programacion", 4);
         index = sf.getIndexReserva();
-        Reserva rv = new Reserva(sf.getIndexReserva(), fecha, pr, laboratorio, semana, dia, transformadorBloqueInteger , as, numComputadoresReserva);
+        Asignatura asiss = null;
+        for (Asignatura a : asignaturas){
+            if(a.getId().equals(asis)){
+                asiss = a;
+            }
+        }
+        Reserva rv = new Reserva(index, fecha, pr, laboratorio, semana, dia, transformadorBloqueInteger , asiss, numComputadoresReserva);
         if(repetir){
             sf.insertReservaReplay(rv);
         }else{
